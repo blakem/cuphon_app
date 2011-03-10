@@ -4,8 +4,7 @@ class PagesController < ApplicationController
   end
 
   def sms
-    # respond_to do |format|
-    #    format.xml 
-    #  end
+    @number = request.params[:From]
+    @name = 'Monkey Man'
   end
 end

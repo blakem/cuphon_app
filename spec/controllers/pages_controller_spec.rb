@@ -11,11 +11,12 @@ describe PagesController do
     end   
   end
 
-  describe "GET 'sms'" do
+  describe "POST 'sms.xml'" do
  
     it "should be successful" do
-      get 'sms'
+      post 'sms', :From => '21334', :format => 'xml'
       response.should be_success
+      puts response.body
     end   
   end
 
