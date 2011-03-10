@@ -4,5 +4,8 @@ class PagesController < ApplicationController
   end
 
   def sms
+    # respond_to do |format|
+    #    format.xml 
+    #  end
   end
 end
