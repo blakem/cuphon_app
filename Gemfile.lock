@@ -85,6 +85,8 @@ GEM
     trails (1.1.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
+    twiliolib (2.0.7)
+      builder (>= 2.1.2)
     tzinfo (0.3.24)
     webrat (0.7.3)
       nokogiri (>= 1.2.0)
@@ -103,4 +105,5 @@ DEPENDENCIES
   spork
   sqlite3
   trails
+  twiliolib
   webrat

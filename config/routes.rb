@@ -1,7 +1,8 @@
 CuphonApp::Application.routes.draw do
   
   root :to => 'pages#home'
-  match '/test', :to => 'pages#test'
+  match '/voice', :to => 'pages#voice'
+  match '/sms', :to => 'pages#sms'
    
   # The priority is based upon order of creation:
   # first created -> highest priority.

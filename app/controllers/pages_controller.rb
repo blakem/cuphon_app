@@ -1,5 +1,8 @@
 class PagesController < ApplicationController
 
-  def test
+  def voice
+  end
+
+  def sms
   end
 end
