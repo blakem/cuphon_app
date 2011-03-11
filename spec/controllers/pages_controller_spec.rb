@@ -12,12 +12,47 @@ describe PagesController do
   end
 
   describe "POST 'sms.xml'" do
+
+    before(:each) do
+      @valid = {
+        :From => '12345',
+        :Body => 'START',
+        :format => 'xml'
+      }
+    end
  
     it "should be successful" do
-      post 'sms', :From => '21334', :format => 'xml'
+      post 'sms', @valid
       response.should be_success
-      puts response.body
-    end   
+    end
+
+    describe "commands" do
+
+      it "should respond to START" do
+        post 'sms', @valid.merge(:Body => 'START')
+        response.should have_selector('response>sms', :content => 'Welcome')
+      end
+
+      it "should respond commands with spaces and caps" do
+        post 'sms', @valid.merge(:Body => '     STarT   ')
+        response.should have_selector('response>sms', :content => 'Welcome')
+      end
+
+      it "should respond to garbled output with help message" do
+        post 'sms', @valid.merge(:Body => 'alskdfjlasdfj')
+        response.should have_selector('response>sms', :content => 'Sorry')
+      end
+
+      it "should respond to HELP" do
+        post 'sms', @valid.merge(:Body => 'HELP')
+        response.should have_selector('response>sms', :content => "Cuphon.com enables merchants to send" )        
+      end
+
+      it "should respond to STOP" do
+        post 'sms', @valid.merge(:Body => 'STOP')
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended" )        
+      end
+    end
   end
 
   describe "GET 'home'" do
