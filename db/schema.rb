@@ -10,7 +10,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110311201654) do
+ActiveRecord::Schema.define(:version => 20110311222246) do
+
+  create_table "merchants", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "password"
+    t.string   "phone"
+    t.string   "company_name"
+    t.string   "keyword"
+    t.string   "ip_address"
+    t.string   "setup_key"
+    t.string   "cc_number"
+    t.string   "cc_month"
+    t.string   "cc_year"
+    t.string   "cc_code"
+    t.integer  "cc_updated"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "twiml_sms_requests", :force => true do |t|
     t.string   "SmsSid"
