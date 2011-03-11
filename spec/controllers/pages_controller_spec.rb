@@ -21,11 +21,20 @@ describe PagesController do
       }
     end
  
-    it "should be successful" do
-      lambda do
-        post 'sms', @valid
-        response.should be_success
-      end.should change(TwimlSmsRequest, :count).by(1) 
+    describe "success" do
+      it "should be successful" do
+        lambda do
+          post 'sms', @valid
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+      end
+
+      it "should log a TwimlSmsRequest even with other random stuff submitted" do
+        lambda do
+          post 'sms', @valid.merge(:Garbage => 'Foo')
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+      end
     end
 
     describe "commands" do

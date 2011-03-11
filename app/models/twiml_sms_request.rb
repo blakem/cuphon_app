@@ -1,10 +1,20 @@
 class TwimlSmsRequest < ActiveRecord::Base
   
   def self.new_from_params(params)
-    sms_args = params
-    sms_args.delete('format')
-    sms_args.delete('controller')
-    sms_args.delete('action')
-    self.new(sms_args)
+    self.new(
+     :AccountSid   => params[:AccountSid],
+     :Body         => params[:Body],
+     :From         => params[:From],
+     :FromCity     => params[:FromCity],
+     :FromCountry  => params[:FromCountry],
+     :FromState    => params[:FromState],
+     :FromZip      => params[:FromZip],
+     :SmsSid       => params[:SmsSid],
+     :To           => params[:To],
+     :ToCity       => params[:ToCity],
+     :ToCountry    => params[:ToCountry],
+     :ToState      => params[:ToState],
+     :ToZip        => params[:ToZip],
+    )
   end
 end
