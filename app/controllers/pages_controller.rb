@@ -3,11 +3,17 @@ class PagesController < ApplicationController
   end
 
   def sms
-    TwimlSmsRequest.new_from_params(params).save
+    twiml = TwimlSmsRequest.create_from_params(params)
+    @message = process_request(params)
+    twiml.response = @message;
+    twiml.save
+  end
+  
+  def process_request(params)
     key = params[:Body]
     key = key.strip.upcase unless key.nil?
     map = message_map
-    @message = map[key] || map[""]
+    map[key] || map[""]
   end
 
   def message_map    

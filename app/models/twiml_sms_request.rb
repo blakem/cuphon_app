@@ -1,20 +1,7 @@
 class TwimlSmsRequest < ActiveRecord::Base
   
-  def self.new_from_params(params)
-    self.new(
-     :AccountSid   => params[:AccountSid],
-     :Body         => params[:Body],
-     :From         => params[:From],
-     :FromCity     => params[:FromCity],
-     :FromCountry  => params[:FromCountry],
-     :FromState    => params[:FromState],
-     :FromZip      => params[:FromZip],
-     :SmsSid       => params[:SmsSid],
-     :To           => params[:To],
-     :ToCity       => params[:ToCity],
-     :ToCountry    => params[:ToCountry],
-     :ToState      => params[:ToState],
-     :ToZip        => params[:ToZip],
-    )
+  def self.create_from_params(params)
+    attribute_keys = self.new.attributes.keys
+    self.create(params.reject{|k,v| !attribute_keys.member?(k.to_s) })
   end
 end

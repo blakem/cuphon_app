@@ -26,7 +26,7 @@ describe PagesController do
         lambda do
           post 'sms', @valid
           response.should be_success
-        end.should change(TwimlSmsRequest, :count).by(1) 
+        end.should change(TwimlSmsRequest, :count).by(1)
       end
 
      it "should not crash w/o a body" do
@@ -44,6 +44,14 @@ describe PagesController do
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1) 
       end
+
+      it "should store the response in the TwimlSmsRequest" do
+        from = '9034823947239478'
+        post 'sms', @valid.merge(:From => from, :Body => 'STOP ALL')
+        response.should be_success
+        TwimlSmsRequest.find_by_From(from).response.should =~ /Your subscriptions have been suspended/
+      end
+
     end
 
     describe "commands" do
@@ -59,7 +67,7 @@ describe PagesController do
       end
 
       it "should respond to garbled output with help message" do
-        post 'sms', @valid.merge(:Body => 'alskdfjlasdfj')
+        post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
         response.should have_selector('response>sms', :content => 'Sorry')
       end
 
