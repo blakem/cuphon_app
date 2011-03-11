@@ -4,6 +4,7 @@ gem 'rails', '3.0.5'
 gem 'sqlite3'
 gem 'trails'
 gem 'twiliolib'
+gem 'hirb'
 
 group :development do
   gem 'rspec-rails'
