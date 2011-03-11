@@ -29,6 +29,15 @@ describe PagesController do
         end.should change(TwimlSmsRequest, :count).by(1) 
       end
 
+     it "should not crash w/o a body" do
+        lambda do
+          invalid_args = @valid
+          invalid_args.delete(:Body)
+          post 'sms', invalid_args
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+      end
+
       it "should log a TwimlSmsRequest even with other random stuff submitted" do
         lambda do
           post 'sms', @valid.merge(:Garbage => 'Foo')

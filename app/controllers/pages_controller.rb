@@ -4,7 +4,8 @@ class PagesController < ApplicationController
 
   def sms
     TwimlSmsRequest.new_from_params(params).save
-    key = params[:Body].strip.upcase
+    key = params[:Body]
+    key = key.strip.upcase unless key.nil?
     map = message_map
     @message = map[key] || map[""]
   end
