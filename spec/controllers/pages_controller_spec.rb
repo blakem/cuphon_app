@@ -22,8 +22,10 @@ describe PagesController do
     end
  
     it "should be successful" do
-      post 'sms', @valid
-      response.should be_success
+      lambda do
+        post 'sms', @valid
+        response.should be_success
+      end.should change(TwimlSmsRequest, :count).by(1) 
     end
 
     describe "commands" do
