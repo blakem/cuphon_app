@@ -1,20 +1,47 @@
 require 'spec_helper'
 
 describe Brand do
+  before(:each) do
+    @valid = {
+      :title => 'YummyPork',
+      :featured => true,
+      :instant => false,
+      :active => true
+    }
+  end
+  
   describe "enum fields" do
-    before(:each) do
-      @valid = {
-        :title => 'YummyPork',
-        :featured => true,
-        :instant => false,
-        :active => true
-      }
-    end
     
     it "should create" do
       brand = Brand.create(@valid)
       brand.valid?.should be_true
-      brand.title.should == 'YummyPork'      
+      brand.title.should == 'YummyPork'
+      brand.featured.should be_true
+      brand.instant.should be_false
+      brand.active.should be_true
     end
+    
+    it "should be findable" do
+      Brand.create(@valid)
+      Brand.find_by_title(@valid[:title]).should_not be_nil
+      Brand.where(:featured => true).should_not be_nil
+      Brand.where(:instant => false).should_not be_nil
+      Brand.where(:active => true).should_not be_nil      
+    end
+  end
+  
+  describe "merchant relationship" do
+    it "with merchant" do
+      @merchant =  Factory(:merchant)
+      brand = Brand.create(@valid.merge({:merchant_id => @merchant.id}))
+      brand.merchant.should == @merchant
+      @merchant.brands.should == [brand]
+    end
+
+    it "without merchant" do
+      brand = Brand.create(@valid)
+      brand.merchant.should be_nil
+    end
+        
   end
 end
