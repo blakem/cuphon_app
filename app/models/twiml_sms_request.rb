@@ -1,9 +1,9 @@
 # == Schema Information
-# Schema version: 20110311201654
+# Schema version: 20110312023249
 #
 # Table name: twiml_sms_requests
 #
-#  id          :integer         not null, primary key
+#  id          :integer(4)      not null, primary key
 #  SmsSid      :string(255)
 #  AccountSid  :string(255)
 #  From        :string(255)
