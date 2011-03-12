@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Subscriber do
+  
   it "should be able to subscribe! and unsubscribe!" do
     brand = Factory(:brand)
     subscriber = Factory(:subscriber)
@@ -36,4 +37,22 @@ describe Subscriber do
     subscriber.unsubscribe!('bunchofrandom stuff not there')
     subscriber.should_not be_nil
   end
+
+  it "is_subscribed?" do
+    string = 'MonsterPow'
+    subscriber = Factory(:subscriber)
+    subscriber.is_subscribed?(string).should be_false
+    
+    subscriber.subscribe!(string)
+    subscriber.reload
+    subscriber.is_subscribed?(string).should be_true
+
+    brand = Brand.find_by_title(string)
+    subscriber.is_subscribed?(brand).should be_true
+    
+    subscriber.unsubscribe!(brand)
+    subscriber.reload
+    subscriber.is_subscribed?(brand).should be_false    
+  end
+
 end

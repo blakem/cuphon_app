@@ -18,13 +18,15 @@ class Subscriber < ActiveRecord::Base
   end
 
   def unsubscribe!(brand)
-    if !brand.respond_to?(:id)
-      brand_str = brand
-      brand = Brand.find_by_title(brand)
-      return unless brand
-    end
-    
+    brand = Brand.get_by_obj_or_string(brand)
+    return unless brand
     subscription = subscriptions.find_by_brand_id(brand.id)
     subscription.destroy if subscription    
+  end
+  
+  def is_subscribed?(brand)
+    brand = Brand.get_by_obj_or_string(brand)
+    return unless brand
+    self.brands.include?(brand)
   end
 end

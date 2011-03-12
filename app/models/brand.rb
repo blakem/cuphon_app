@@ -15,4 +15,11 @@
 
 class Brand < ActiveRecord::Base
   belongs_to :merchant
+  def self.get_by_obj_or_string(brand)
+    if !brand.respond_to?(:id)
+      brand_str = brand
+      brand = Brand.find_by_title(brand)
+    end
+    brand
+  end
 end
