@@ -17,6 +17,12 @@ production:
   <<: *login
   database: cuphon_production
 
+localtest:
+  adapter: mysql2
+  username: root
+  database: cuphon_localtest
+  
+
 
 # # SQLite version 3.x
 # #   gem install sqlite3

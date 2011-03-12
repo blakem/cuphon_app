@@ -11,7 +11,7 @@ group :development do
   gem 'annotate-models'
 end
 
-group :test do
+group :test, :localtest do
   gem 'rspec'
   gem 'spork'
   gem 'webrat'

@@ -97,11 +97,8 @@ describe PagesController do
           end.should change(Subscriber, :count).by(1)
           brand = Brand.find_by_title(body)
           brand.title.should == body
-          subscriber = Subscriber.where(:device_id => phone)
-          subscriber.should_not be_nil
-          
-          subscription = Subscription.where(:device_id => phone, :brand_id => brand.id).first
-          subscription.should_not be_nil
+          subscriber = Subscriber.find_by_device_id(phone)
+          subscriber.brands.should include(brand)
         end
       end
       
