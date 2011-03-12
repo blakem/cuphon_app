@@ -68,7 +68,7 @@ describe PagesController do
 
       it "should respond to garbled output with help message" do
         post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
-        response.should have_selector('response>sms', :content => 'Sorry')
+        response.should have_selector('response>sms', :content => 'have been subscribed') # How do we tell between garbage and real tags?
       end
 
       it "should respond to HELP" do
@@ -81,7 +81,22 @@ describe PagesController do
         response.should have_selector('response>sms', :content => "Your subscriptions have been suspended" )        
       end
     end
-  end
+
+    describe "Matching with brands" do
+      describe "when it's their first time" do
+        it "should create a brand if it doesn't exist" do
+          phone = Factory.next(:phone)
+          lambda do
+            lambda do
+              post 'sms', @valid.merge(:Body => 'TastyChicken', :From => phone )
+              response.should have_selector('response>sms', :content => "been subscribed to TastyChicken" )
+            end.should change(Brand, :count).by(1)
+          end.should change(Subscriber, :count).by(1)
+          subscriber = Subscriber.find_by_device_id(phone)        
+        end
+      end
+    end
+  end  
 
   describe "GET 'home'" do
  
@@ -89,5 +104,5 @@ describe PagesController do
       get 'home'
       response.should be_success
     end   
-  end
+  end  
 end

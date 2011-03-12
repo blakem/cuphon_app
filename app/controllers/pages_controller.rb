@@ -12,8 +12,15 @@ class PagesController < ApplicationController
   def process_request(params)
     key = params[:Body]
     key = key.strip.upcase unless key.nil?
+    Subscriber.create(:device_id => params[:From])
+    
     map = message_map
-    map[key] || map[""]
+    response = map[key]
+    if response.nil?
+      Brand.create(:title => key)
+      response = "Welcome to Cuphon! You have been subscribed to #{params[:Body]}"
+    end
+    return response
   end
 
   def message_map    

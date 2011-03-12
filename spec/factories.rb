@@ -17,3 +17,7 @@ end
 Factory.sequence :email do |n|
   "personf-#{n+1}@example.com"
 end
+
+Factory.sequence :phone do |n|
+  "+1415#{sprintf( '%07i', n+1 )}"
+end

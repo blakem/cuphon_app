@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110312023249) do
+ActiveRecord::Schema.define(:version => 20110312041701) do
 
   create_table "brands", :force => true do |t|
     t.string   "title"
@@ -38,6 +38,15 @@ ActiveRecord::Schema.define(:version => 20110312023249) do
     t.integer  "cc_updated"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "subscribers", :force => true do |t|
+    t.string   "device_id"
+    t.string   "push_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "type",       :limit => 0
+    t.string   "active",     :limit => 0
   end
 
   create_table "twiml_sms_requests", :force => true do |t|
