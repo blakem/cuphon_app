@@ -101,6 +101,6 @@ DEPENDENCIES
   rails (= 3.0.5)
   rspec
   rspec-rails
-  spork
+  spork (= 0.8.4)
   sqlite3
   webrat

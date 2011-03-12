@@ -13,7 +13,7 @@ end
 
 group :test, :localtest do
   gem 'rspec'
-  gem 'spork'
+  gem 'spork', '0.8.4'
   gem 'webrat'
   gem 'factory_girl_rails'
 end
