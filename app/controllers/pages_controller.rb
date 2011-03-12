@@ -10,18 +10,21 @@ class PagesController < ApplicationController
   end
   
   def process_request(params)
-    key = params[:Body]
-    key = key.strip.upcase unless key.nil?
-    subscriber = Subscriber.create(:device_id => params[:From])
-    
-    map = message_map
-    response = map[key]
+    subscriber = Subscriber.find_or_create_by_device_id(params[:From])    
+
+    response = lookup_response(params[:Body])
     if response.nil?
       brand = Brand.create(:title => params[:Body])
       Subscription.create(:device_id => subscriber.device_id, :brand_id => brand.id, :brand_title => brand.title)
       response = "Welcome to Cuphon! You have been subscribed to #{params[:Body]}"
     end
     return response
+  end
+
+  def lookup_response(key)
+    key = key.strip.upcase unless key.nil?
+    map = message_map
+    map[key]
   end
 
   def message_map    

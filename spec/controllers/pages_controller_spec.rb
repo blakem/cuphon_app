@@ -73,12 +73,12 @@ describe PagesController do
 
       it "should respond to HELP" do
         post 'sms', @valid.merge(:Body => 'HELP')
-        response.should have_selector('response>sms', :content => "Cuphon.com enables merchants to send" )        
+        response.should have_selector('response>sms', :content => "Cuphon.com enables merchants to send")        
       end
 
       it "should respond to STOP" do
         post 'sms', @valid.merge(:Body => 'STOP')
-        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended" )        
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
       end
     end
 
@@ -92,7 +92,7 @@ describe PagesController do
           lambda do
             lambda do
               post 'sms', @valid.merge(:Body => body, :From => phone )
-              response.should have_selector('response>sms', :content => "been subscribed to #{body}" )
+              response.should have_selector('response>sms', :content => "been subscribed to #{body}")
             end.should change(Brand, :count).by(1)
           end.should change(Subscriber, :count).by(1)
           brand = Brand.find_by_title(body)
@@ -103,6 +103,26 @@ describe PagesController do
           subscription = Subscription.where(:device_id => phone, :brand_id => brand.id).first
           subscription.should_not be_nil
         end
+      end
+      
+      describe "when they already exist" do
+        it "should use the existing subscriber" do
+          phone = Factory.next(:phone)
+          body = 'YummySandwich'
+          subscriber = Subscriber.create(:device_id => phone)
+          lambda do
+            post 'sms', @valid.merge(:Body => body, :From => phone )
+            response.should have_selector('response>sms', :content => "been subscribed to #{body}")
+          end.should_not change(Subscriber, :count)
+
+          brand = Brand.find_by_title(body)
+          subscription = Subscription.where(:device_id => phone, :brand_id => brand.id).first
+          subscription.brand.should == brand
+          
+          subscriber.subscriptions.should include(subscription)
+          subscriber.brands.should include(brand)
+        end
+        
       end
     end
   end  
