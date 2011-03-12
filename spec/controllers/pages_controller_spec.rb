@@ -66,6 +66,11 @@ describe PagesController do
         response.should have_selector('response>sms', :content => 'Welcome')
       end
 
+      it "should respond commands with spaces and caps in help" do
+        post 'sms', @valid.merge(:Body => ' HeLp ')
+        response.should have_selector('response>sms', :content => "Cuphon.com enables merchants to send")        
+      end
+
       it "should respond to garbled output with help message" do
         post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
         response.should have_selector('response>sms', :content => 'have been subscribed') # How do we tell between garbage and real tags?
@@ -98,7 +103,7 @@ describe PagesController do
           brand = Brand.find_by_title(body)
           brand.title.should == body
           subscriber = Subscriber.find_by_device_id(phone)
-          subscriber.brands.should include(brand)
+          subscriber.is_subscribed?(brand).should be_true
         end
       end
       
@@ -117,13 +122,34 @@ describe PagesController do
           subscription.brand.should == brand
           
           subscriber.subscriptions.should include(subscription)
-          subscriber.brands.should include(brand)
+          subscriber.is_subscribed?(brand).should be_true
         end
         
       end
     end
-  end  
 
+    describe "unsubscribing from a single list" do
+      it "should unsubscribe on 'STOP BRAND" do
+        brand = Factory(:brand)
+        subscriber = Factory(:subscriber)
+        subscriber.subscribe!(brand)
+        post 'sms', @valid.merge(:Body => "STOP #{brand.title}", :From => subscriber.device_id)
+        subscriber.reload
+        subscriber.is_subscribed?(brand).should be_false      
+      end
+
+      it "should unsubscribe on 'UNSUBSCRIBE BRAND" do
+        brand = Factory(:brand)
+        subscriber = Factory(:subscriber)
+        subscriber.subscribe!(brand)
+        post 'sms', @valid.merge(:Body => "UNSUBSCRIBE #{brand.title}", :From => subscriber.device_id)
+        subscriber.reload
+        subscriber.is_subscribed?(brand).should be_false      
+      end
+
+    end
+  end  
+  
   describe "GET 'home'" do
  
     it "should be successful" do
