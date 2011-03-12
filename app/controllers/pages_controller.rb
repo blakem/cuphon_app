@@ -10,12 +10,10 @@ class PagesController < ApplicationController
   end
   
   def process_request(params)
-    subscriber = Subscriber.find_or_create_by_device_id(params[:From])    
-
+    subscriber = Subscriber.find_or_create_by_device_id(params[:From])
     response = lookup_response(params[:Body])
     if response.nil?
-      brand = Brand.create(:title => params[:Body])
-      Subscription.create(:device_id => subscriber.device_id, :brand_id => brand.id, :brand_title => brand.title)
+      subscriber.subscribe!(params[:Body])
       response = "Welcome to Cuphon! You have been subscribed to #{params[:Body]}"
     end
     return response
