@@ -1,25 +1,20 @@
-development:
+login: &login
   username: root
   adapter: mysql2
   port: 1083
   host: db.cuphon.dotcloud.com
   password: ;[sGueRsr1_Fvc_a[vB/
+
+development:
+  <<: *login
   database: cuphon_development
 
 test:
-  username: root
-  adapter: mysql2
-  port: 1083
-  host: db.cuphon.dotcloud.com
-  password: ;[sGueRsr1_Fvc_a[vB/
+  <<: *login
   database: cuphon_test
 
 production:
-  username: root
-  adapter: mysql2
-  port: 1083
-  host: db.cuphon.dotcloud.com
-  password: ;[sGueRsr1_Fvc_a[vB/
+  <<: *login
   database: cuphon_production
 
 
