@@ -83,16 +83,25 @@ describe PagesController do
     end
 
     describe "Matching with brands" do
+
       describe "when it's their first time" do
+    
         it "should create a brand if it doesn't exist" do
+          body = 'TastyPickles'
           phone = Factory.next(:phone)
           lambda do
             lambda do
-              post 'sms', @valid.merge(:Body => 'TastyChicken', :From => phone )
-              response.should have_selector('response>sms', :content => "been subscribed to TastyChicken" )
+              post 'sms', @valid.merge(:Body => body, :From => phone )
+              response.should have_selector('response>sms', :content => "been subscribed to #{body}" )
             end.should change(Brand, :count).by(1)
           end.should change(Subscriber, :count).by(1)
-          subscriber = Subscriber.find_by_device_id(phone)        
+          brand = Brand.find_by_title(body)
+          brand.title.should == body
+          subscriber = Subscriber.where(:device_id => phone)
+          subscriber.should_not be_nil
+          
+          subscription = Subscription.where(:device_id => phone, :brand_id => brand.id).first
+          subscription.should_not be_nil
         end
       end
     end
