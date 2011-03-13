@@ -200,6 +200,18 @@ describe PagesController do
       end
     end
     
+    describe "unsubscribing from a brand that you're not already subscribed to" do
+      it "should send message on 'STOP unknownbrand'" do
+        brand = Factory(:brand)
+        subscriber = Factory(:subscriber)
+        subscriber.is_subscribed?(brand).should be_false      
+        post 'sms', @valid.merge(:Body => "STOP #{brand.title}", :From => subscriber.device_id)
+        response.should have_selector('response>sms', :content => "You are not currently subscribed to #{brand.title}.")
+        subscriber.reload
+        subscriber.is_subscribed?(brand).should be_false      
+      end
+    end
+
     describe "subscribing to a single list" do
       ['START', 'JOIN', ''].each do |cmd|
          it "should subscribe on '#{cmd} BRAND'" do

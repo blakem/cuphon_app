@@ -42,8 +42,12 @@ class PagesController < ApplicationController
           end
           "Your subscriptions have been suspended. You will no longer receive coupon offers! To activate your subscriptions, reply with START at any time! Thx, Cuphon.com"
         else
-          subscriber.unsubscribe!(brand)
-          "Your subscription to #{brand} has been suspended. You will no longer receive coupon offers! To activate your subscription, reply with START #{brand} at any time! Thx, Cuphon.com"
+          if subscriber.is_subscribed?(brand)
+            subscriber.unsubscribe!(brand)
+            "Your subscription to #{brand} has been suspended. You will no longer receive coupon offers! To activate your subscription, reply with START #{brand} at any time! Thx, Cuphon.com"
+          else
+            "You are not currently subscribed to #{brand}."
+          end
         end
       else
         "Sorry, we didn't understand your message. Reply HELP for help. Reply STOP to cancel messages."
