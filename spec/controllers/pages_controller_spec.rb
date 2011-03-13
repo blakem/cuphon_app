@@ -3,19 +3,11 @@ require 'spec_helper'
 describe PagesController do
   render_views
   
-  describe "GET 'voice'" do
- 
-    it "should be successful" do
-      get 'voice'
-      response.should be_success
-    end   
-  end
-
   describe "POST 'sms.xml'" do
 
     before(:each) do
       @valid = {
-        :From => '12345',
+        :From => Factory.next(:phone),
         :Body => 'START',
         :format => 'xml'
       }
@@ -54,26 +46,11 @@ describe PagesController do
 
     end
 
-    describe "commands" do
+    describe "basic commands" do
 
       it "should respond to START" do
         post 'sms', @valid.merge(:Body => 'START')
         response.should have_selector('response>sms', :content => 'Welcome')
-      end
-
-      it "should respond commands with spaces and caps" do
-        post 'sms', @valid.merge(:Body => '     STarT   ')
-        response.should have_selector('response>sms', :content => 'Welcome')
-      end
-
-      it "should respond commands with spaces and caps in help" do
-        post 'sms', @valid.merge(:Body => ' HeLp ')
-        response.should have_selector('response>sms', :content => "Cuphon.com enables merchants to send")        
-      end
-
-      it "should respond to garbled output with help message" do
-        post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
-        response.should have_selector('response>sms', :content => 'have been subscribed') # How do we tell between garbage and real tags?
       end
 
       it "should respond to HELP" do
@@ -84,6 +61,47 @@ describe PagesController do
       it "should respond to STOP" do
         post 'sms', @valid.merge(:Body => 'STOP')
         response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
+      end
+
+      it "should respond to JOIN" do
+        post 'sms', @valid.merge(:Body => 'JOIN')
+        response.should have_selector('response>sms', :content => "Welcome to Cuphon!")        
+      end
+
+      it "should respond to QUIT" do
+        post 'sms', @valid.merge(:Body => 'QUIT')
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
+      end
+
+      it "should respond to UNSUBSCRIBE" do
+        post 'sms', @valid.merge(:Body => 'UNSUBSCRIBE')
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
+      end
+
+      it "should respond to END" do
+        post 'sms', @valid.merge(:Body => 'END')
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
+      end
+      it "should respond to STOP ALL" do
+        post 'sms', @valid.merge(:Body => 'STOP ALL')
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
+      end
+
+      describe "variations on commands" do
+        it "should respond commands with spaces and caps" do
+          post 'sms', @valid.merge(:Body => '     STarT   ')
+          response.should have_selector('response>sms', :content => 'Welcome')
+        end
+
+        it "should respond commands with spaces and caps in help" do
+          post 'sms', @valid.merge(:Body => ' HeLp ')
+          response.should have_selector('response>sms', :content => "Cuphon.com enables merchants to send")        
+        end
+
+        it "should respond to garbled output with help message" do
+          post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
+          response.should have_selector('response>sms', :content => 'have been subscribed') # How do we tell between garbage and real tags?
+        end
       end
     end
 
@@ -129,24 +147,35 @@ describe PagesController do
     end
 
     describe "unsubscribing from a single list" do
-      it "should unsubscribe on 'STOP BRAND" do
-        brand = Factory(:brand)
-        subscriber = Factory(:subscriber)
-        subscriber.subscribe!(brand)
-        post 'sms', @valid.merge(:Body => "STOP #{brand.title}", :From => subscriber.device_id)
-        subscriber.reload
-        subscriber.is_subscribed?(brand).should be_false      
+      %w[STOP QUIT UNSUBSCRIBE END].each do |cmd|
+        it "should unsubscribe on '#{cmd} BRAND'" do
+          brand = Factory(:brand)
+          subscriber = Factory(:subscriber)
+          subscriber.subscribe!(brand)
+          post 'sms', @valid.merge(:Body => "#{cmd} #{brand.title}", :From => subscriber.device_id)
+          subscriber.reload
+          subscriber.is_subscribed?(brand).should be_false      
+        end
       end
+    end
 
-      it "should unsubscribe on 'UNSUBSCRIBE BRAND" do
-        brand = Factory(:brand)
-        subscriber = Factory(:subscriber)
-        subscriber.subscribe!(brand)
-        post 'sms', @valid.merge(:Body => "UNSUBSCRIBE #{brand.title}", :From => subscriber.device_id)
-        subscriber.reload
-        subscriber.is_subscribed?(brand).should be_false      
+    describe "unsubscribing from a all list" do
+      %w[STOP QUIT UNSUBSCRIBE END].each do |cmd|
+        it "should unsubscribe to everything on '#{cmd} ALL'" do
+          brand1 = Factory(:brand)
+          brand2 = Factory(:brand)
+          brand3 = Factory(:brand)
+          subscriber = Factory(:subscriber)
+          subscriber.subscribe!(brand1)
+          subscriber.subscribe!(brand2)
+          subscriber.subscribe!(brand3)
+          post 'sms', @valid.merge(:Body => "#{cmd} All", :From => subscriber.device_id)
+          subscriber.reload
+          subscriber.is_subscribed?(brand1).should be_false      
+          subscriber.is_subscribed?(brand2).should be_false      
+          subscriber.is_subscribed?(brand3).should be_false      
+        end
       end
-
     end
   end  
   
@@ -157,4 +186,13 @@ describe PagesController do
       response.should be_success
     end   
   end  
+
+  describe "GET 'voice'" do
+ 
+    it "should be successful" do
+      get 'voice'
+      response.should be_success
+    end   
+  end
+
 end

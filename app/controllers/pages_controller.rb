@@ -27,18 +27,29 @@ class PagesController < ApplicationController
         "Welcome to Cuphon! You have been subscribed to #{brand}"
       when 'JOIN'
         start_msg
+
       when 'HELP'
         "Cuphon.com enables merchants to send coupons directly to your phone! Max 3 msgs/week per merchant. Reply STOP to cancel. Msg&data rates may apply."
+
+      when 'END'
+        perform_action(subscriber, 'UNSUBSCRIBE', brand)
       when 'STOP'
         perform_action(subscriber, 'UNSUBSCRIBE', brand)
-      when 'STOP ALL'
-        stop_msg
       when 'QUIT'
+        perform_action(subscriber, 'UNSUBSCRIBE', brand)
+      when 'UNSUBSCRIBE'
+        if brand =~ /^all$/i
+          subscriber.brands.each do |brand|
+            subscriber.unsubscribe!(brand)
+          end
+        else
+          subscriber.unsubscribe!(brand)
+        end
         stop_msg
-      when 'UNSUBSCRIBE' 
-        subscriber.unsubscribe!(brand)
-        stop_msg
-      when 'END'
+      when 'STOP ALL'
+        subscriber.brands.each do |brand|
+          subscriber.unsubscribe!(brand)
+        end
         stop_msg
       else
         "Sorry, we didn't understand your message. Reply HELP for help. Reply STOP to cancel messages."
