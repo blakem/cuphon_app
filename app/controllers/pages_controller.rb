@@ -61,9 +61,10 @@ class PagesController < ApplicationController
 
     def parse_action_and_brand(string)
       return [nil, nil] unless string
-      (action, brand) = string.strip.split(/\s/, 2)
+      string = string.split.join(' ')
+      (action, brand) = string.split(/\s+/, 2)
       if !valid_actions.member?(action.upcase)
-        brand = string.strip.split.join(" ")
+        brand = string
         action = 'START'
       end
       return [action.upcase, brand]

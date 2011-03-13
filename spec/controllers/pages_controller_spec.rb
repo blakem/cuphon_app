@@ -224,6 +224,28 @@ describe PagesController do
       end
     end
 
+    describe "subscribing with a string that has multiple spaces in" do
+       it "should trim out the multiple spaces" do
+         msg = '    Jamba    Cat   Dog   Pig    '
+         brand_msg = 'Jamba Cat Dog Pig'
+         subscriber = Factory(:subscriber)
+         post 'sms', @valid.merge(:Body => msg, :From => subscriber.device_id)
+         response.should have_selector('response>sms', :content => "been subscribed to #{brand_msg}")
+         subscriber.reload
+         subscriber.is_subscribed?(brand_msg).should be_true
+       end
+
+       it "should trim out the multiple spaces with leading start" do
+         msg = '   start    Jamba    Cat   Dog   Pig    '
+         brand_msg = 'Jamba Cat Dog Pig'
+         subscriber = Factory(:subscriber)
+         post 'sms', @valid.merge(:Body => msg, :From => subscriber.device_id)
+         response.should have_selector('response>sms', :content => "been subscribed to #{brand_msg}")
+         subscriber.reload
+         subscriber.is_subscribed?(brand_msg).should be_true
+       end
+    end
+
     describe "Ignore profanity" do
        it "should ignore 'MILF'" do
          msg = 'MILF'
