@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313054015) do
+ActiveRecord::Schema.define(:version => 20110313054523) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -80,6 +80,13 @@ ActiveRecord::Schema.define(:version => 20110313054015) do
   create_table "log_instant_cuphons", :force => true do |t|
     t.string   "device_id"
     t.integer  "brand_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "log_merchant_logins", :force => true do |t|
+    t.integer  "merchant_id"
+    t.string   "ip_address"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
