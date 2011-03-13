@@ -100,7 +100,7 @@ describe PagesController do
 
         it "should respond to garbled output with help message" do
           post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
-          response.should have_selector('response>sms', :content => 'have been subscribed') # How do we tell between garbage and real tags?
+          response.should have_selector('response>sms', :content => "You've been subscribed to") # How do we tell between garbage and real tags?
         end
       end
     end

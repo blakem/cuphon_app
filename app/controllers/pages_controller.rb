@@ -30,7 +30,7 @@ class PagesController < ApplicationController
           ""
         else
           subscriber.subscribe!(brand)
-          "Welcome to Cuphon! You have been subscribed to #{brand}"
+          "You've been subscribed to #{brand}! Soon you'll get coupons directly from this merchant, spread the word and keep discovering!"
         end
       when 'HELP'
         "Cuphon.com enables merchants to send coupons directly to your phone! Max 3 msgs/week per merchant. Reply STOP to cancel. Msg&data rates may apply."
