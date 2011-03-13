@@ -18,15 +18,13 @@ class PagesController < ApplicationController
     end
     
     def perform_action(subscriber, action, brand)
-      start_msg = "Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help. Msg & data rates may apply. Max 3 msgs/week per merchant. Visit Cuphon.com to learn more!"
-      stop_msg  = "Your subscriptions have been suspended. You will no longer receive coupon offers! To activate your subscriptions, reply with START at any time! Thx, Cuphon.com"
-
+      # start_msg = "Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help. Msg & data rates may apply. Max 3 msgs/week per merchant. Visit Cuphon.com to learn more!"
       case action
+      when 'JOIN'
+        perform_action(subscriber, 'START', brand)
       when 'START'
         subscriber.subscribe!(brand)
         "Welcome to Cuphon! You have been subscribed to #{brand}"
-      when 'JOIN'
-        start_msg
 
       when 'HELP'
         "Cuphon.com enables merchants to send coupons directly to your phone! Max 3 msgs/week per merchant. Reply STOP to cancel. Msg&data rates may apply."
@@ -38,19 +36,15 @@ class PagesController < ApplicationController
       when 'QUIT'
         perform_action(subscriber, 'UNSUBSCRIBE', brand)
       when 'UNSUBSCRIBE'
-        if brand =~ /^all$/i
+        if brand.nil? or brand =~ /^all$/i
           subscriber.brands.each do |brand|
             subscriber.unsubscribe!(brand)
           end
+          "Your subscriptions have been suspended. You will no longer receive coupon offers! To activate your subscriptions, reply with START at any time! Thx, Cuphon.com"
         else
           subscriber.unsubscribe!(brand)
+          "Your subscription to #{brand} has been suspended. You will no longer receive coupon offers! To activate your subscription, reply with START #{brand} at any time! Thx, Cuphon.com"
         end
-        stop_msg
-      when 'STOP ALL'
-        subscriber.brands.each do |brand|
-          subscriber.unsubscribe!(brand)
-        end
-        stop_msg
       else
         "Sorry, we didn't understand your message. Reply HELP for help. Reply STOP to cancel messages."
       end
@@ -58,10 +52,6 @@ class PagesController < ApplicationController
 
     def parse_action_and_brand(string)
       return [nil, nil] unless string
-      if string =~ /^\s*stop\s*all\s*$/i
-        return ['STOP ALL', nil]
-      end
-    
       (action, brand) = string.strip.split(/\s/, 2)
       if !valid_actions.member?(action.upcase)
         brand = action

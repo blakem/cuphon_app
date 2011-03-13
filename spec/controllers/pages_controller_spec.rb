@@ -146,20 +146,41 @@ describe PagesController do
       end
     end
 
-    describe "unsubscribing from a single list" do
+   describe "unsubscribing from a single list" do
       %w[STOP QUIT UNSUBSCRIBE END].each do |cmd|
         it "should unsubscribe on '#{cmd} BRAND'" do
           brand = Factory(:brand)
           subscriber = Factory(:subscriber)
           subscriber.subscribe!(brand)
           post 'sms', @valid.merge(:Body => "#{cmd} #{brand.title}", :From => subscriber.device_id)
+          response.should have_selector('response>sms', :content => "Your subscription to #{brand.title} has been suspended")
           subscriber.reload
           subscriber.is_subscribed?(brand).should be_false      
         end
       end
     end
 
-    describe "unsubscribing from a all list" do
+    describe "unsubscribing from a all list using CMD" do
+      %w[STOP QUIT UNSUBSCRIBE END].each do |cmd|
+        it "should unsubscribe to everything on '#{cmd}'" do
+          brand1 = Factory(:brand)
+          brand2 = Factory(:brand)
+          brand3 = Factory(:brand)
+          subscriber = Factory(:subscriber)
+          subscriber.subscribe!(brand1)
+          subscriber.subscribe!(brand2)
+          subscriber.subscribe!(brand3)
+          post 'sms', @valid.merge(:Body => "#{cmd}", :From => subscriber.device_id)
+          response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")
+          subscriber.reload
+          subscriber.is_subscribed?(brand1).should be_false      
+          subscriber.is_subscribed?(brand2).should be_false      
+          subscriber.is_subscribed?(brand3).should be_false      
+        end
+      end
+    end
+
+    describe "unsubscribing from a all list using CMD ALL" do
       %w[STOP QUIT UNSUBSCRIBE END].each do |cmd|
         it "should unsubscribe to everything on '#{cmd} ALL'" do
           brand1 = Factory(:brand)
@@ -170,6 +191,7 @@ describe PagesController do
           subscriber.subscribe!(brand2)
           subscriber.subscribe!(brand3)
           post 'sms', @valid.merge(:Body => "#{cmd} All", :From => subscriber.device_id)
+          response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")
           subscriber.reload
           subscriber.is_subscribed?(brand1).should be_false      
           subscriber.is_subscribed?(brand2).should be_false      
@@ -177,6 +199,18 @@ describe PagesController do
         end
       end
     end
+    
+    describe "subscribing to a single list" do
+      ['START', 'JOIN', ''].each do |cmd|
+         it "should subscribe on '#{cmd} BRAND'" do
+           brand = Factory(:brand)
+           subscriber = Factory(:subscriber)
+           post 'sms', @valid.merge(:Body => "#{cmd} #{brand.title}", :From => subscriber.device_id)
+           subscriber.reload
+           subscriber.is_subscribed?(brand).should be_true
+         end
+       end
+     end
   end  
   
   describe "GET 'home'" do
