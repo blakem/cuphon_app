@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313060003) do
+ActiveRecord::Schema.define(:version => 20110313060506) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -142,6 +142,14 @@ ActiveRecord::Schema.define(:version => 20110313060003) do
   create_table "short_urls_log", :force => true do |t|
     t.string   "url"
     t.string   "ip_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sms_incoming", :force => true do |t|
+    t.string   "sid"
+    t.string   "from"
+    t.string   "message"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
