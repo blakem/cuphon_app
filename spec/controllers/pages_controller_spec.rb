@@ -232,6 +232,17 @@ describe PagesController do
          response.should_not have_selector('response>sms')
          subscriber.reload
          subscriber.is_subscribed?(msg).should be_false
+         Brand.find_by_title(msg).should be_nil
+       end
+
+       it "should ignore 'sentences with MILF in them'" do
+         msg = 'sentences with MILF in them'         
+         subscriber = Factory(:subscriber)
+         post 'sms', @valid.merge(:Body => msg, :From => subscriber.device_id)
+         response.should_not have_selector('response>sms')         
+         subscriber.reload
+         subscriber.is_subscribed?(msg).should be_false
+         Brand.find_by_title(msg).should be_nil
        end
     end
   end  

@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  require 'profanity_checker'
+  
   def voice
   end
 
@@ -23,7 +25,7 @@ class PagesController < ApplicationController
       when 'JOIN'
         perform_action(subscriber, 'START', brand)
       when 'START'
-        if brand == 'MILF'
+        if ProfanityChecker.has_profane_word?(brand)
           ""
         else
           subscriber.subscribe!(brand)
@@ -61,7 +63,7 @@ class PagesController < ApplicationController
       return [nil, nil] unless string
       (action, brand) = string.strip.split(/\s/, 2)
       if !valid_actions.member?(action.upcase)
-        brand = action
+        brand = string.strip.split.join(" ")
         action = 'START'
       end
       return [action.upcase, brand]
