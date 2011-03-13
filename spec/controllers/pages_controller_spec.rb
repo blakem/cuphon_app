@@ -115,7 +115,7 @@ describe PagesController do
           lambda do
             lambda do
               post 'sms', @valid.merge(:Body => body, :From => phone )
-              # response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+              response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
               response.should have_selector('response>sms', :content => "been subscribed to #{body}")
             end.should change(Brand, :count).by(1)
           end.should change(Subscriber, :count).by(1)

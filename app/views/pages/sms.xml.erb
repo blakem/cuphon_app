@@ -1,5 +1,5 @@
 <Response>
-  <% if @message and @message.length > 0 %>
-    <Sms><%= @message %></Sms>
+  <% @messages.each do |message| %>
+    <Sms><%= message %></Sms>
   <% end %>
 </Response>

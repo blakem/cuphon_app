@@ -3,25 +3,25 @@ class PagesController < ApplicationController
 
   def sms
     twiml = TwimlSmsRequest.create_from_params(params)
-    @message = process_request(params)
-    twiml.response = @message;
+    @messages = []
+    if !Subscriber.find_by_device_id(params[:From])
+      @messages << "Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help. Msg & data rates may apply. Max 3 msgs/week per merchant. Visit Cuphon.com to learn more!"
+    end
+    message = process_request(params)
+    @messages << message if message.length > 0 
+    twiml.response = @messages.join( '|||' );
     twiml.save
   end
 
   private
 
     def process_request(params)
-      subscriber = Subscriber.find_by_device_id(params[:From])
-      if subscriber.nil?
-        subscriber = Subscriber.create(:device_id => params[:From])
-        subscriber.is_new = true
-      end
+      subscriber = Subscriber.find_or_create_by_device_id(params[:From])
       (action, brand) = parse_action_and_brand(params[:Body])
       perform_action(subscriber, action, brand)
     end
     
     def perform_action(subscriber, action, brand)
-      # start_msg = "Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help. Msg & data rates may apply. Max 3 msgs/week per merchant. Visit Cuphon.com to learn more!"
       case action
       when 'JOIN'
         perform_action(subscriber, 'START', brand)
