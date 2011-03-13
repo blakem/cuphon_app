@@ -47,7 +47,14 @@ describe Brand do
     it "without merchant" do
       brand = Brand.create(@valid)
       brand.merchant.should be_nil
+    end 
+  end
+
+  describe "brands_instant relationship" do
+    it "should have a brands_instant method" do
+      instant = Factory(:brands_instant)
+      brand = instant.brand
+      brand.brands_instants.should include(instant)      
     end
-        
   end
 end
