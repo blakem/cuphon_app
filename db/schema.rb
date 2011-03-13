@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313055302) do
+ActiveRecord::Schema.define(:version => 20110313055622) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -125,6 +125,18 @@ ActiveRecord::Schema.define(:version => 20110313055302) do
     t.string   "referrer"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "short_urls", :force => true do |t|
+    t.string   "url"
+    t.string   "merchant_title"
+    t.string   "unsubscribe_title"
+    t.string   "text_1"
+    t.string   "text_2"
+    t.string   "image_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "opened",            :limit => 0
   end
 
   create_table "subscribers", :force => true do |t|
