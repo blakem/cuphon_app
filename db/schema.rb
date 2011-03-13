@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313054523) do
+ActiveRecord::Schema.define(:version => 20110313054901) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -107,6 +107,15 @@ ActiveRecord::Schema.define(:version => 20110313054523) do
     t.integer  "cc_updated"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "password_resets", :force => true do |t|
+    t.string   "forgot_code"
+    t.integer  "merchant_id"
+    t.string   "ip_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "used",        :limit => 0
   end
 
   create_table "subscribers", :force => true do |t|
