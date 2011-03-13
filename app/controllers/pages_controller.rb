@@ -33,8 +33,6 @@ class PagesController < ApplicationController
           subscriber.subscribe!(brand)
           OutboundMessages.subscribed_message(brand)
         end
-      when 'HELP'
-        OutboundMessages.help_message
 
       when 'END'
         perform_action(subscriber, 'UNSUBSCRIBE', brand)
@@ -54,6 +52,9 @@ class PagesController < ApplicationController
             OutboundMessages.not_currently_subscribed_message(brand)
           end
         end
+        
+      when 'HELP'
+        OutboundMessages.help_message
       when 'RESETSTATUS'
         subscriber.unsubscribe_all!
         subscriber.destroy
