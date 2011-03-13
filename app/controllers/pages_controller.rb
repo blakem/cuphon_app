@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   require 'profanity_checker'
   
   def sms
-    request["Accept"] = 'application/xml'
+    request["Accept"] = 'text/xml'
     twiml = TwimlSmsRequest.create_from_params(params)
     @message = process_request(params)
     twiml.response = @message;
