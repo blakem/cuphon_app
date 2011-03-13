@@ -311,17 +311,17 @@ describe PagesController do
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
 
-      # it "should match on an alias" do
-      #    brand = Factory(:brand, :title => 'WikiWooWorkshop')
-      #    brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
-      #    brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
-      #    phone = Factory.next(:phone)
-      #    post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)
-      #    response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
-      #    response.should have_selector('response>sms', :content => "An instant coupon for you!")
-      #    response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
-      #    response.should_not have_selector('response>sms', :content => "been subscribed to")
-      # end
+      it "should match on an alias" do
+         brand = Factory(:brand, :title => 'WikiWooWorkshop')
+         brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+         brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
+         phone = Factory.next(:phone)
+         post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)
+         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+         response.should have_selector('response>sms', :content => "An instant coupon for you!")
+         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
+         response.should_not have_selector('response>sms', :content => "been subscribed to")
+      end
 
     end
 
