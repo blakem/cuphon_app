@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313060506) do
+ActiveRecord::Schema.define(:version => 20110313061231) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -191,6 +191,20 @@ ActiveRecord::Schema.define(:version => 20110313060506) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "response"
+  end
+
+  create_table "twittersquare_data", :force => true do |t|
+    t.string   "city"
+    t.string   "foursquare_venue_id"
+    t.string   "venue_name"
+    t.string   "tweet_text"
+    t.string   "tweet_id"
+    t.string   "state"
+    t.string   "twitter_name"
+    t.integer  "followers_count"
+    t.string   "created"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
