@@ -31,7 +31,12 @@ class PagesController < ApplicationController
           ""
         else
           subscriber.subscribe!(brand)
-          OutboundMessages.subscribed_message(brand)
+          brand_obj = Brand.find_by_title(brand)
+          if !brand_obj.nil? and brand_obj.has_active_instant?
+            brand_obj.send_active_message
+          else
+            OutboundMessages.subscribed_message(brand)
+          end
         end
 
       when 'END'

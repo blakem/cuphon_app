@@ -56,5 +56,13 @@ describe Brand do
       brand = instant.brand
       brand.brands_instants.should include(instant)      
     end
+    
+    it "should have a has_active_instant method" do
+      brand = Factory(:brand)
+      brand.has_active_instant?.should be_false
+      
+      BrandsInstant.create(:brand_id => brand.id)
+      brand.has_active_instant?.should be_true
+    end
   end
 end

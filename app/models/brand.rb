@@ -15,7 +15,6 @@
 
 class Brand < ActiveRecord::Base
   belongs_to :merchant
-  has_many :brands_instants
   
   def self.get_by_obj_or_string(brand)
     if !brand.respond_to?(:id)
@@ -25,11 +24,16 @@ class Brand < ActiveRecord::Base
     brand
   end
     
-  # def send_active_message
-  #   self.brands_instants.first
-  # end
-  # 
-  # def has_active_instant?
-  #   self.brands_instants
-  # end
+  def brands_instants
+    # has_many :brands_instants
+    BrandsInstant.where(:brand_id => self.id)
+  end
+  
+  def send_active_message
+    self.brands_instants.first.title
+  end
+  
+  def has_active_instant?
+    self.brands_instants.any?
+  end
 end
