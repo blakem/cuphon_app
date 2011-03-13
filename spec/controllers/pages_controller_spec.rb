@@ -3,6 +3,11 @@ require 'spec_helper'
 describe PagesController do
   render_views
   
+  after(:all) do
+    Brand.all.each { |o| o.destroy }
+    Subscriber.all.each { |o| o.destroy }
+  end
+  
   describe "POST 'sms.xml'" do
 
     before(:each) do
@@ -292,7 +297,32 @@ describe PagesController do
         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
         response.should have_selector('response>sms', :content => "An instant coupon for you!")
         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
+        response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
+
+      it "should match on case insensitive" do
+         brand = Factory(:brand, :title => 'WikiWooWorkshop')
+         brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+         phone = Factory.next(:phone)
+         post 'sms', @valid.merge(:Body => '  join wikiWOOworkShop   ', :From => phone)
+         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+         response.should have_selector('response>sms', :content => "An instant coupon for you!")
+         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")
+         response.should_not have_selector('response>sms', :content => "been subscribed to")
+      end
+
+      # it "should match on an alias" do
+      #    brand = Factory(:brand, :title => 'WikiWooWorkshop')
+      #    brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+      #    brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
+      #    phone = Factory.next(:phone)
+      #    post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)
+      #    response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+      #    response.should have_selector('response>sms', :content => "An instant coupon for you!")
+      #    response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
+      #    response.should_not have_selector('response>sms', :content => "been subscribed to")
+      # end
+
     end
 
   end  
