@@ -7,7 +7,7 @@ describe PagesController do
 
     before(:each) do
       @valid = {
-        :From => Factory.next(:phone),
+        :From => '+12223334444',
         :Body => 'START',
         :format => 'xml'
       }
@@ -134,6 +134,7 @@ describe PagesController do
           lambda do
             post 'sms', @valid.merge(:Body => body, :From => phone )
             response.should have_selector('response>sms', :content => "been subscribed to #{body}")
+            response.should_not have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
           end.should_not change(Subscriber, :count)
 
           brand = Brand.find_by_title(body)
@@ -281,6 +282,19 @@ describe PagesController do
         Subscriber.find_by_device_id(device_id).should be_nil
       end
     end
+    
+    # describe "instant coupon" do
+    #   it "should send an instant coupon when one is found" do
+    #     brand = Factory(:brand)
+    #     brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+    #     phone = Factory.next(:phone)
+    #     subscriber = Factory(:subscriber, :device_id => phone)
+    #     post 'sms', @valid.merge(:Body => brand.title, :From => subscriber.device_id)
+    #     response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+    #     response.should have_selector('response>sms', :content => "An instant coupon for you!")
+    #     response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
+    #   end
+    # end
 
   end  
   

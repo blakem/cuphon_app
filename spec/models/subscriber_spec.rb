@@ -68,4 +68,10 @@ describe Subscriber do
       subscriber.is_subscribed?(brand).should be_false
     end
   end
+  
+  it "should get a new and unique device_id from the factory" do
+    subscriber1 = Factory(:subscriber)
+    subscriber2 = Factory(:subscriber)
+    subscriber1.device_id.should_not == subscriber2.device_id
+  end
 end

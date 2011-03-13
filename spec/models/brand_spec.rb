@@ -29,6 +29,12 @@ describe Brand do
       Brand.where(:active => true).should_not be_nil      
     end
   end
+
+  describe "factory methods" do
+    brand1 = Factory(:brand)
+    brand2 = Factory(:brand)
+    brand1.title.should_not == brand2.title
+  end
   
   describe "merchant relationship" do
     it "with merchant" do
