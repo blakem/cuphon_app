@@ -55,4 +55,17 @@ describe Subscriber do
     subscriber.is_subscribed?(brand).should be_false    
   end
 
+  it "should unsubscribe from all brands on unsubscribe_all!" do
+    brands = [Factory(:brand), Factory(:brand), Factory(:brand)]    
+    subscriber = Factory(:subscriber)
+
+    brands.each do |brand|
+      subscriber.subscribe!(brand)
+    end
+    subscriber.unsubscribe_all!
+    subscriber.reload
+    brands.each do |brand|
+      subscriber.is_subscribed?(brand).should be_false
+    end
+  end
 end

@@ -1,11 +1,12 @@
 class PagesController < ApplicationController
   require 'profanity_checker'
+  require 'outbound_messages'
 
   def sms
     twiml = TwimlSmsRequest.create_from_params(params)
     @messages = []
     if !Subscriber.find_by_device_id(params[:From])
-      @messages << "Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help. Msg & data rates may apply. Max 3 msgs/week per merchant. Visit Cuphon.com to learn more!"
+      @messages << OutboundMessages.welcome_message
     end
     message = process_request(params)
     @messages << message if message.length > 0 
@@ -30,10 +31,10 @@ class PagesController < ApplicationController
           ""
         else
           subscriber.subscribe!(brand)
-          "You've been subscribed to #{brand}! Soon you'll get coupons directly from this merchant, spread the word and keep discovering!"
+          OutboundMessages.subscribed_message(brand)
         end
       when 'HELP'
-        "Cuphon.com enables merchants to send coupons directly to your phone! Max 3 msgs/week per merchant. Reply STOP to cancel. Msg&data rates may apply."
+        OutboundMessages.help_message
 
       when 'END'
         perform_action(subscriber, 'UNSUBSCRIBE', brand)
@@ -43,26 +44,22 @@ class PagesController < ApplicationController
         perform_action(subscriber, 'UNSUBSCRIBE', brand)
       when 'UNSUBSCRIBE'
         if brand.nil? or brand =~ /^all$/i
-          subscriber.brands.each do |brand|
-            subscriber.unsubscribe!(brand)
-          end
-          "Your subscriptions have been suspended. You will no longer receive coupon offers! To activate your subscriptions, reply with START at any time! Thx, Cuphon.com"
+          subscriber.unsubscribe_all!
+          OutboundMessages.unsubscribe_all_message
         else
           if subscriber.is_subscribed?(brand)
             subscriber.unsubscribe!(brand)
-            "Your subscription to #{brand} has been suspended. You will no longer receive coupon offers! To activate your subscription, reply with START #{brand} at any time! Thx, Cuphon.com"
+            OutboundMessages.unsubscribe_message(brand)
           else
-            "You are not currently subscribed to #{brand}."
+            OutboundMessages.not_currently_subscribed_message(brand)
           end
         end
       when 'RESETSTATUS'
-        subscriber.brands.each do |brand|
-          subscriber.unsubscribe!(brand)
-        end
+        subscriber.unsubscribe_all!
         subscriber.destroy
-        "You are now reset to a new user"
+        OutboundMessages.resetstatus_message
       else
-        "Sorry, we didn't understand your message. Reply HELP for help. Reply STOP to cancel messages."
+        OutboundMessages.sorry_message
       end
     end
 
@@ -78,6 +75,6 @@ class PagesController < ApplicationController
     end
 
     def valid_actions
-      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS] << "STOP ALL"
+      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS]
     end
 end

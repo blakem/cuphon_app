@@ -38,6 +38,12 @@ class Subscriber < ActiveRecord::Base
     subscription.destroy if subscription    
   end
   
+  def unsubscribe_all!
+    self.brands.each do |brand|
+      self.unsubscribe!(brand)
+    end
+  end
+      
   def is_subscribed?(brand)
     brand = Brand.get_by_obj_or_string(brand)
     return unless brand
