@@ -221,8 +221,19 @@ describe PagesController do
            subscriber.reload
            subscriber.is_subscribed?(brand).should be_true
          end
+      end
+    end
+
+    describe "Ignore profanity" do
+       it "should ignore 'MILF'" do
+         msg = 'MILF'
+         subscriber = Factory(:subscriber)
+         post 'sms', @valid.merge(:Body => msg, :From => subscriber.device_id)
+         response.should_not have_selector('response>sms')
+         subscriber.reload
+         subscriber.is_subscribed?(msg).should be_false
        end
-     end
+    end
   end  
   
   describe "GET 'home'" do

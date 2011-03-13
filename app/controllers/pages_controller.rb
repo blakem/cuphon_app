@@ -23,9 +23,12 @@ class PagesController < ApplicationController
       when 'JOIN'
         perform_action(subscriber, 'START', brand)
       when 'START'
-        subscriber.subscribe!(brand)
-        "Welcome to Cuphon! You have been subscribed to #{brand}"
-
+        if brand == 'MILF'
+          ""
+        else
+          subscriber.subscribe!(brand)
+          "Welcome to Cuphon! You have been subscribed to #{brand}"
+        end
       when 'HELP'
         "Cuphon.com enables merchants to send coupons directly to your phone! Max 3 msgs/week per merchant. Reply STOP to cancel. Msg&data rates may apply."
 
