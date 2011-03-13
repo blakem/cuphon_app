@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313051736) do
+ActiveRecord::Schema.define(:version => 20110313052323) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -36,6 +36,16 @@ ActiveRecord::Schema.define(:version => 20110313051736) do
     t.datetime "opened_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "api_discover", :force => true do |t|
+    t.string   "title"
+    t.integer  "brand_id"
+    t.datetime "expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "featured",   :limit => 0
+    t.string   "instant",    :limit => 0
   end
 
   create_table "brands", :force => true do |t|
