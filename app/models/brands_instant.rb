@@ -16,4 +16,6 @@
 
 class BrandsInstant < ActiveRecord::Base
   def self.table_name() "brands_instant" end
+    
+  belongs_to :brand
 end
