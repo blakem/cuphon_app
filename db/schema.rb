@@ -10,7 +10,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110312043515) do
+ActiveRecord::Schema.define(:version => 20110313045916) do
+
+  create_table "api_calls", :force => true do |t|
+    t.string   "device_id"
+    t.string   "call"
+    t.text     "response"
+    t.text     "payload"
+    t.text     "variables"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "brands", :force => true do |t|
     t.string   "title"
