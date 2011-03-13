@@ -1,3 +1,4 @@
+git push
 git push heroku
 echo "Heroku Done....."
 git push beanstalk
