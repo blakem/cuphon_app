@@ -1,5 +1,6 @@
 class Subscriber < ActiveRecord::Base
   has_many :subscriptions, :foreign_key => 'device_id', :primary_key => 'device_id'
+  attr_accessor_with_default :is_new, false
 
   def brands
     # has_many :brands, :through => :subscriptions

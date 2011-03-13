@@ -1,9 +1,6 @@
 class PagesController < ApplicationController
   require 'profanity_checker'
   
-  def voice
-  end
-
   def sms
     twiml = TwimlSmsRequest.create_from_params(params)
     @message = process_request(params)
@@ -14,7 +11,11 @@ class PagesController < ApplicationController
   private
 
     def process_request(params)
-      subscriber = Subscriber.find_or_create_by_device_id(params[:From])
+      subscriber = Subscriber.find_by_device_id(params[:From])
+      if subscriber.nil?
+        subscriber = Subscriber.create(:device_id => params[:From])
+        subscriber.is_new = true
+      end
       (action, brand) = parse_action_and_brand(params[:Body])
       perform_action(subscriber, action, brand)
     end
