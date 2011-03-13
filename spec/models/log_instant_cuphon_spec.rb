@@ -1,5 +1,7 @@
 require 'spec_helper'
 
 describe LogInstantCuphon do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "should be able to create" do
+    LogInstantCuphon.create().should_not be_nil
+  end
 end
