@@ -268,6 +268,20 @@ describe PagesController do
          Brand.find_by_title(msg).should be_nil
        end
     end
+
+    describe "RESETSTATUS message will erase a user from the db" do
+      it "should remove a user if sent RESETSTATUS message" do
+        device_id = Factory.next(:phone)
+        brand = Factory(:brand)
+        subscriber = Factory(:subscriber, :device_id => device_id)
+        subscriber.subscribe!(brand)
+        post 'sms', @valid.merge(:Body => "RESETSTATUS", :From => subscriber.device_id)
+        response.should have_selector('response>sms', :content => "You are now reset to a new user")
+        Subscription.find_by_device_id_and_brand_id(device_id, brand.id).should be_nil
+        Subscriber.find_by_device_id(device_id).should be_nil
+      end
+    end
+
   end  
   
   describe "GET 'home'" do

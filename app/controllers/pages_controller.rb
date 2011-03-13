@@ -55,6 +55,12 @@ class PagesController < ApplicationController
             "You are not currently subscribed to #{brand}."
           end
         end
+      when 'RESETSTATUS'
+        subscriber.brands.each do |brand|
+          subscriber.unsubscribe!(brand)
+        end
+        subscriber.destroy
+        "You are now reset to a new user"
       else
         "Sorry, we didn't understand your message. Reply HELP for help. Reply STOP to cancel messages."
       end
@@ -72,6 +78,6 @@ class PagesController < ApplicationController
     end
 
     def valid_actions
-      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END] << "STOP ALL"
+      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS] << "STOP ALL"
     end
 end

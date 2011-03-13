@@ -1,3 +1,17 @@
+# == Schema Information
+# Schema version: 20110313064440
+#
+# Table name: subscribers
+#
+#  id         :integer(4)      not null, primary key
+#  device_id  :string(255)
+#  push_id    :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#  type       :string(0)
+#  active     :string(0)
+#
+
 class Subscriber < ActiveRecord::Base
   has_many :subscriptions, :foreign_key => 'device_id', :primary_key => 'device_id'
 
