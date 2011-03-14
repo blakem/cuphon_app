@@ -43,6 +43,14 @@ class Brand < ActiveRecord::Base
     self.brands_instants.any?
   end
   
+  def self.get_or_create(title)
+    brand = self.find_by_title(title)
+    return brand if brand
+    brand = Brand.create(:title => title)
+    BrandsInstant.create(:brand_id => brand.id)
+    brand
+  end
+  
   def self.find_by_fuzzy_match(string)
     brand = find_by_title(string)
     if brand.nil?

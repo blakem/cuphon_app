@@ -3,7 +3,8 @@ require 'spec_helper'
 describe PagesController do
   render_views
   
-  after(:all) do
+  after(:each) do
+    BrandsInstant.all.each { |o| o.destroy }
     Brand.all.each { |o| o.destroy }
     Subscriber.all.each { |o| o.destroy }
   end
@@ -134,8 +135,19 @@ describe PagesController do
           subscriber = Subscriber.find_by_device_id(phone)
           subscriber.is_subscribed?(brand).should be_true
         end
-      end
       
+        it "When creating a brand it should create a brand instant as well" do
+          body = 'OriginalTastyPickles'
+          phone = Factory.next(:phone)
+          lambda do
+            post 'sms', @valid.merge(:Body => body, :From => phone )
+            response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+            response.should have_selector('response>sms', :content => "been subscribed to #{body}")
+          end.should change(BrandsInstant, :count).by(1)
+        end
+
+      end
+
       describe "when they already exist" do
         it "should use the existing subscriber" do
           phone = Factory.next(:phone)
