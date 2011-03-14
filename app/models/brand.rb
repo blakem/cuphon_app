@@ -36,4 +36,15 @@ class Brand < ActiveRecord::Base
   def has_active_instant?
     self.brands_instants.any?
   end
+  
+  def self.find_by_fuzzy_match(string)
+    brand = find_by_title(string)
+    if brand.nil?
+      brand_alias = BrandsAlias.find_by_alias(string)
+      if !brand_alias.nil?
+        brand = brand_alias.brand
+      end
+    end
+    return brand
+  end
 end

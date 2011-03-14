@@ -311,7 +311,7 @@ describe PagesController do
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
 
-      it "should match on an alias" do
+      it "should match on an alias with an instant coupon" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
          brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
          brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
@@ -323,6 +323,14 @@ describe PagesController do
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
 
+      it "should match on an alias without an instant coupon" do
+         brand = Factory(:brand, :title => 'WikiWooWorkshop2')
+         brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName2')
+         phone = Factory.next(:phone)
+         post 'sms', @valid.merge(:Body => '  join AnotherCOOLName2   ', :From => phone)
+         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+         response.should have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
+      end
     end
 
   end  

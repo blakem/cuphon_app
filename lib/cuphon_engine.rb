@@ -12,11 +12,16 @@ module CuphonEngine
         if ProfanityChecker.has_profane_word?(brand)
           ""
         else
-          subscriber.subscribe!(brand)
-          brand_obj = Brand.find_by_title(brand)
-          if !brand_obj.nil? and brand_obj.has_active_instant?
-            brand_obj.send_active_message
+          brand_obj = Brand.find_by_fuzzy_match(brand)
+          if !brand_obj.nil?
+            subscriber.subscribe!(brand_obj)
+            if brand_obj.has_active_instant?
+              brand_obj.send_active_message
+            else
+              OutboundMessages.subscribed_message(brand_obj.title)
+            end
           else
+            subscriber.subscribe!(brand)
             OutboundMessages.subscribed_message(brand)
           end
         end
