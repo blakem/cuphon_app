@@ -30,7 +30,7 @@ class Brand < ActiveRecord::Base
   end
   
   def send_active_message
-    self.brands_instants.first.title
+    self.brands_instants.first.generate_sms_text
   end
   
   def has_active_instant?

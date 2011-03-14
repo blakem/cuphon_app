@@ -15,7 +15,13 @@
 #
 
 class BrandsInstant < ActiveRecord::Base
+  require 'outbound_messages'
+
   def self.table_name() "brands_instant" end
-    
+
   belongs_to :brand
+
+  def generate_sms_text
+    OutboundMessages.instant_cuphon_message(self.brand.title, self.description, "http://SOMEURL")
+  end
 end

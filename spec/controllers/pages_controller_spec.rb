@@ -290,23 +290,26 @@ describe PagesController do
     
     describe "instant coupon" do
       it "should send an instant coupon when one is found" do
+        # "Cuphon from Starbucks: Come in for our new holiday lattes, buy one get one 50% off!. More: http://cphn.me/sbux1"
         brand = Factory(:brand)
-        brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+        brand_instant = BrandsInstant.create(:brand_id => brand.id, 
+                                             :title => 'An instant coupon for you!',
+                                             :description => 'Come in for our new holiday lattes, buy one get one 50% off!')
         phone = Factory.next(:phone)
         post 'sms', @valid.merge(:Body => brand.title, :From => phone)
         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
-        response.should have_selector('response>sms', :content => "An instant coupon for you!")
+        response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}: #{brand_instant.description} More: ")
         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
         response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
 
       it "should match on case insensitive" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
-         brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+         brand_instant = BrandsInstant.create(:brand_id => brand.id)
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join wikiWOOworkShop   ', :From => phone)
          response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
-         response.should have_selector('response>sms', :content => "An instant coupon for you!")
+         response.should have_selector('response>sms', :content => "Cuphon from WikiWooWorkshop:")
          response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
@@ -318,7 +321,7 @@ describe PagesController do
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)
          response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
-         response.should have_selector('response>sms', :content => "An instant coupon for you!")
+         response.should have_selector('response>sms', :content => "Cuphon from WikiWooWorkshop:")
          response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
