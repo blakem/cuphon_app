@@ -78,6 +78,11 @@ describe PagesController do
         response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
       end
 
+      it "should respond to NO" do
+        post 'sms', @valid.merge(:Body => 'NO')
+        response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
+      end
+      
       it "should respond to UNSUBSCRIBE" do
         post 'sms', @valid.merge(:Body => 'UNSUBSCRIBE')
         response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        

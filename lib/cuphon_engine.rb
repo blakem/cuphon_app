@@ -8,7 +8,7 @@ module CuphonEngine
       case action
       when 'JOIN', 'START'
         perform_start_action(subscriber, brand)
-      when 'END', 'STOP', 'QUIT', 'UNSUBSCRIBE'
+      when 'END', 'STOP', 'QUIT', 'UNSUBSCRIBE', 'NO'
         perform_stop_action(subscriber, brand)
       when 'HELP'
         OutboundMessages.help_message

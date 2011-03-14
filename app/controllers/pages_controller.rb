@@ -36,6 +36,6 @@ class PagesController < ApplicationController
     end
 
     def valid_actions
-      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS]
+      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS NO]
     end
 end
