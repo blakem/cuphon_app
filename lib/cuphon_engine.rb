@@ -6,17 +6,9 @@ module CuphonEngine
 
     def perform_action(subscriber, action, brand)
       case action
-      when 'JOIN'
+      when 'JOIN', 'START'
         perform_start_action(subscriber, brand)
-      when 'START'
-        perform_start_action(subscriber, brand)
-      when 'END'
-        perform_stop_action(subscriber, brand)
-      when 'STOP'
-        perform_stop_action(subscriber, brand)
-      when 'QUIT'
-        perform_stop_action(subscriber, brand)
-      when 'UNSUBSCRIBE'
+      when 'END', 'STOP', 'QUIT', 'UNSUBSCRIBE'
         perform_stop_action(subscriber, brand)
       when 'HELP'
         OutboundMessages.help_message
