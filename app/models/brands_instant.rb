@@ -14,15 +14,7 @@
 #  updated_at  :datetime
 #
 
-class BrandsInstant < ActiveRecord::Base
-  require 'short_url_generator'
-  require 'outbound_messages'
-  
+class BrandsInstant < ActiveRecord::Base  
   def self.table_name() "brands_instant" end
-
   belongs_to :brand
-
-  def generate_sms_text
-    OutboundMessages.instant_cuphon_message(self.brand.title, self.description, ShortUrlGenerator.short_url)
-  end
 end

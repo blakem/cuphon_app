@@ -14,6 +14,9 @@
 #
 
 class Brand < ActiveRecord::Base
+  require 'short_url_generator'
+  require 'outbound_messages'
+  
   belongs_to :merchant
   
   def self.get_by_obj_or_string(brand)
@@ -30,7 +33,10 @@ class Brand < ActiveRecord::Base
   end
   
   def send_active_message
-    self.brands_instants.first.generate_sms_text
+    instant = self.brands_instants.first # xxx sort by updated_at time
+    short_url = ShortUrlGenerator.short_url
+    ShortUrl.create(:url => short_url)
+    OutboundMessages.instant_cuphon_message(self.title, instant.description, short_url)
   end
   
   def has_active_instant?

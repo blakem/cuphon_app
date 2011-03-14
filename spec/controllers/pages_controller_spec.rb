@@ -307,8 +307,11 @@ describe PagesController do
         response.body.should =~ /More: http:\/\/cphn.me\/[a-z0-9]{5}/
         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
         response.should_not have_selector('response>sms', :content => "been subscribed to")
+        response.body =~ /More: (http:\/\/cphn.me\/[a-z0-9]{5})/
+        short_url = ShortUrl.find_by_url($1)
+        short_url.should_not be_nil
       end
-
+      
       it "should match on case insensitive" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
          brand_instant = BrandsInstant.create(:brand_id => brand.id)
