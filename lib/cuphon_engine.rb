@@ -21,21 +21,17 @@ module CuphonEngine
 
     private
       def perform_start_action(subscriber, brand)
-        if ProfanityChecker.has_profane_word?(brand)
-          ""
-        else
-          brand_obj = Brand.find_by_fuzzy_match(brand)
-          if !brand_obj.nil?
-            subscriber.subscribe!(brand_obj)
-            if brand_obj.has_active_instant?
-              brand_obj.send_active_message
-            else
-              OutboundMessages.subscribed_message(brand_obj.title)
-            end
+        return false if ProfanityChecker.has_profane_word?(brand)
+        if brand_obj = Brand.find_by_fuzzy_match(brand)
+          subscriber.subscribe!(brand_obj)
+          if brand_obj.has_active_instant?
+            brand_obj.send_active_message
           else
-            subscriber.subscribe!(brand)
-            OutboundMessages.subscribed_message(brand)
+            OutboundMessages.subscribed_message(brand_obj.title)
           end
+        else
+          subscriber.subscribe!(brand)
+          OutboundMessages.subscribed_message(brand)
         end
       end
     
