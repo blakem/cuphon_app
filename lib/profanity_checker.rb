@@ -20,6 +20,9 @@ module ProfanityChecker
     def profane_words
       @@dictionary.keys + %w(
         milf
+        gayct
+        gaylips
+        suck
       )
     end
     

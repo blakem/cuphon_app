@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110314004849) do
+ActiveRecord::Schema.define(:version => 20110314110640) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -56,6 +56,9 @@ ActiveRecord::Schema.define(:version => 20110314004849) do
     t.string   "featured",    :limit => 0
     t.string   "instant",     :limit => 0
     t.string   "active",      :limit => 0
+    t.string   "longitude"
+    t.string   "latitude"
+    t.string   "checked",     :limit => 0, :default => "false"
   end
 
   create_table "brands_aliases", :force => true do |t|

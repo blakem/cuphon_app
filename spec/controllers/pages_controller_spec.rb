@@ -7,6 +7,7 @@ describe PagesController do
     BrandsInstant.all.each { |o| o.destroy }
     Brand.all.each { |o| o.destroy }
     Subscriber.all.each { |o| o.destroy }
+    QueuedMessage.all.each { |o| o.destroy }
   end
   
   describe "POST 'sms.xml'" do
@@ -56,7 +57,8 @@ describe PagesController do
 
       it "should respond to START" do
         post 'sms', @valid.merge(:Body => 'START')
-        response.should have_selector('response>sms', :content => 'Welcome')
+#        response.body = 
+        QueuedMessage.where('body LIKE ? ', '%Welcome%').should_not be_empty
       end
 
       it "should respond to HELP" do
