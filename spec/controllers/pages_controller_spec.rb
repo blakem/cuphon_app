@@ -368,6 +368,9 @@ describe PagesController do
         response.body =~ /More: (http:\/\/cphn.me\/[a-z0-9]{5})/
         short_url = ShortUrl.find_by_url($1)
         short_url.should_not be_nil
+        
+        QueuedMessage.where('body LIKE ? ', '%Welcome%').first.priority.should == 2
+        QueuedMessage.where('body LIKE ? ', '%Cuphon from%').first.priority.should == 1
       end
       
       it "should match on case insensitive" do
