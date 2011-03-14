@@ -15,6 +15,9 @@
 #
 
 class BrandsInstant < ActiveRecord::Base
+  require 'short_url_generator'
+  require 'outbound_messages'
+  
   def self.table_name() "brands_instant" end
 
   belongs_to :brand
