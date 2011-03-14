@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110313064440) do
+ActiveRecord::Schema.define(:version => 20110314004849) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -134,6 +134,14 @@ ActiveRecord::Schema.define(:version => 20110313064440) do
     t.string   "ip_address"
     t.string   "created"
     t.string   "referrer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "queued_messages", :force => true do |t|
+    t.string   "device_id"
+    t.string   "body"
+    t.integer  "priority"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
