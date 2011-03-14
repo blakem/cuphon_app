@@ -359,6 +359,17 @@ describe PagesController do
          subscriber.is_subscribed?(msg).should be_false
          Brand.find_by_title(msg).should be_nil
        end
+
+       it "should ignore strings that match a certain pattern" do
+         msg = 'thisIs a sentence withFuckIn the middle'
+         subscriber = Factory(:subscriber)
+         post 'sms', @valid.merge(:Body => msg, :From => subscriber.device_id)
+         tweak_response(response)
+         response.should_not have_selector('response>sms')         
+         subscriber.reload
+         subscriber.is_subscribed?(msg).should be_false
+         Brand.find_by_title(msg).should be_nil
+       end
     end
 
     describe "RESETSTATUS message will erase a user from the db" do

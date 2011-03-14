@@ -5,8 +5,11 @@ module ProfanityChecker
     
     def is_profane?(word)
       return false if word.nil?
-      words = self.profane_words
-      profane_word_hash[word.strip.downcase] || false
+      return true if profane_word_hash[word.strip.downcase]
+      profane_regexps.each do |regexp| 
+        return true if word =~ regexp
+      end
+      return false
     end
     
     def has_profane_word?(string)
@@ -24,6 +27,10 @@ module ProfanityChecker
         gaylips
         suck
       )
+    end
+    
+    def profane_regexps
+      [/fuck/i, /shit/i]
     end
     
     def profane_word_hash
