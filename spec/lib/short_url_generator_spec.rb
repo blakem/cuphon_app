@@ -24,4 +24,16 @@ describe ShortUrlGenerator do
     url.should =~ /^http:\/\/cphn.me\/[a-z0-9]{5}$/
   end
   
+  it "should ensure that it doesn't already exist" do
+    module ShortUrlGenerator
+      @@words = ['FOOBAR', 'BAZQUX']
+      def self.random_base
+        return @@words.shift
+      end
+    end
+    ShortUrl.create(:url => 'http://cphn.me/FOOBAR')
+    url = ShortUrlGenerator.short_url
+    url.should == 'http://cphn.me/BAZQUX'
+  end
+  
 end

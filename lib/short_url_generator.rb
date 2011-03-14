@@ -10,7 +10,8 @@ module ShortUrlGenerator
     end
     
     def short_url
-      "http://cphn.me/" + random_base
+      url = "http://cphn.me/" + random_base
+      ShortUrl.find_by_url(url) ? self.short_url : url
     end
   end
 end
