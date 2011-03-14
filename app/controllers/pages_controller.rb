@@ -15,6 +15,7 @@ class PagesController < ApplicationController
 
   private
      def build_messages(params)
+       return [] if is_duplicate?(params)
        [ welcome_message(params),
          process_request(params) 
        ].select {|n| n}
@@ -42,5 +43,10 @@ class PagesController < ApplicationController
 
     def valid_actions
       %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS NO]
+    end
+    
+    def is_duplicate?(params)
+      previous = TwimlSmsRequest.find_all_by_From_and_Body(params[:From], params[:Body])
+      previous.select { |p| p.created_at > 10.minutes.ago }.length > 1
     end
 end
