@@ -6,9 +6,21 @@ module CuphonEngine
 
     def perform_action(subscriber, action, brand)
       case action
-      when 'JOIN'
-        perform_action(subscriber, 'START', brand)
-      when 'START'
+      when %w(JOIN START)
+        perform_start_action(subscriber, brand)
+      when %w(END STOP QUIT UNSUBSCRIBE)
+        perform_stop_action(subscriber, brand)
+      when 'HELP'
+        OutboundMessages.help_message
+      when 'RESETSTATUS'
+        perform_reset_action(subscriber, brand)
+      else
+        OutboundMessages.sorry_message
+      end
+    end
+
+    private
+      def perform_start_action(subscriber, brand)
         if ProfanityChecker.has_profane_word?(brand)
           ""
         else
@@ -25,14 +37,9 @@ module CuphonEngine
             OutboundMessages.subscribed_message(brand)
           end
         end
-
-      when 'END'
-        perform_action(subscriber, 'UNSUBSCRIBE', brand)
-      when 'STOP'
-        perform_action(subscriber, 'UNSUBSCRIBE', brand)
-      when 'QUIT'
-        perform_action(subscriber, 'UNSUBSCRIBE', brand)
-      when 'UNSUBSCRIBE'
+      end
+    
+      def perform_stop_action(subscriber, brand)
         if brand.nil? or brand =~ /^all$/i
           subscriber.unsubscribe_all!
           OutboundMessages.unsubscribe_all_message
@@ -44,16 +51,12 @@ module CuphonEngine
             OutboundMessages.not_currently_subscribed_message(brand)
           end
         end
+      end
       
-      when 'HELP'
-        OutboundMessages.help_message
-      when 'RESETSTATUS'
+      def perform_reset_action(subscriber, brand)
         subscriber.unsubscribe_all!
         subscriber.destroy
         OutboundMessages.resetstatus_message
-      else
-        OutboundMessages.sorry_message
       end
-    end
   end  
 end
