@@ -27,5 +27,8 @@ module OutboundMessages
     def instant_cuphon_message(brand, description, url)
       "Cuphon from #{brand}: #{description} More: #{url}"
     end
+    def already_subscribed_message(brand)
+      "You are already subscribed to #{brand}."
+    end
   end 
 end

@@ -248,6 +248,16 @@ describe PagesController do
       end
     end
 
+    describe "subscribing to a list you're already subscribed to" do
+      it "should send appropriate message" do
+        brand = Factory(:brand)
+        subscriber = Factory(:subscriber)
+        subscriber.subscribe!(brand)
+        post 'sms', @valid.merge(:Body => brand.title, :From => subscriber.device_id)
+        response.should have_selector('response>sms', :content => "You are already subscribed to #{brand.title}.")
+      end
+    end
+    
     describe "subscribing with a string that has multiple spaces in" do
        it "should trim out the multiple spaces" do
          msg = '    Jamba    Cat   Dog   Pig    '
