@@ -6,6 +6,10 @@ class PagesController < ApplicationController
     @messages = build_messages(params)
     twiml.response = @messages.join( '|||' );
     twiml.save
+    @messages.each do |m|
+      QueuedMessage.create(:device_id => params[:From], :body => m, :priority => 2)
+    end
+    @messages = []
   end
 
   private
