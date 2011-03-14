@@ -40,6 +40,7 @@ class Brand < ActiveRecord::Base
   end
   
   def has_active_instant?
+    return false unless instant?
     self.brands_instants.any?
   end
   

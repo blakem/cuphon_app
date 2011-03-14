@@ -335,6 +335,16 @@ describe PagesController do
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
 
+      it "should not match if instant is disabled on the brand" do
+         brand = Factory(:brand, :title => 'MyInstantsAreOff', :instant => false)
+         brand_instant = BrandsInstant.create(:brand_id => brand.id)
+         phone = Factory.next(:phone)
+         post 'sms', @valid.merge(:Body => 'JOIN MyInstantsAreOff', :From => phone)
+         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+         response.should have_selector('response>sms', :content => "been subscribed to #{brand.title}")
+         response.should_not have_selector('response>sms', :content => "Cuphon from MyInstantsAreOff:")
+      end
+
       it "should match on an alias with an instant coupon" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
          brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')

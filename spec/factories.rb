@@ -24,6 +24,7 @@ end
 
 Factory.define :brand do |brand|
   brand.sequence(:title) { |n| "YummyYummyFancyGoodFood_#{n+1}" }
+  brand.instant                  true
 end
 
 Factory.define :subscriber do |s|
