@@ -1,5 +1,4 @@
 module CuphonEngine
-  require 'outbound_messages'
   require 'profanity_checker'
 
   class << self

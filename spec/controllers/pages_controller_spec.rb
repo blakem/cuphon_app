@@ -304,6 +304,7 @@ describe PagesController do
         post 'sms', @valid.merge(:Body => brand.title, :From => phone)
         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
         response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}: #{brand_instant.description} More: ")
+        response.body.should =~ /More: http:\/\/cphn.me\/[a-z0-9]{5}/
         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
         response.should_not have_selector('response>sms', :content => "been subscribed to")
       end

@@ -2,6 +2,9 @@ I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 = 1
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'outbound_messages'
+require 'short_url_generator'
+require 'outbound_messages'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
