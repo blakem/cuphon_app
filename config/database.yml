@@ -15,7 +15,7 @@ test:
 
 production:
   <<: *login
-  database: cuphon_production
+  database: cuphon
 
 localtest:
   adapter: mysql2
