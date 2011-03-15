@@ -49,6 +49,20 @@ describe Brand do
       brand.merchant.should be_nil
     end 
   end
+  
+  describe "brand_aliases relationship" do
+    it "should have many brand_aliases" do
+      brand = Factory(:brand)
+      brand_alias1 = Factory(:brand_alias, :brand_id => brand.id)
+      brand_alias2 = Factory(:brand_alias, :brand_id => brand.id)
+      brand_alias3 = Factory(:brand_alias)
+      brand.brand_aliases.should include(brand_alias1)
+      brand.brand_aliases.should include(brand_alias2)
+      brand.brand_aliases.should_not include(brand_alias3)
+    
+      brand_alias1.brand.should == brand
+    end
+  end
 
   describe "brands_instant relationship" do
     it "should have a brands_instant method" do
@@ -118,6 +132,13 @@ describe Brand do
       instant = Factory(:brand_instant, :brand_id => brand.id)
       brand.destroy
       BrandInstant.find_by_brand_id(brand.id).should be_nil
+    end
+
+    it "should destroy its brand_alias on deletion" do
+      brand = Factory(:brand)
+      brand_alias = Factory(:brand_alias, :brand_id => brand.id)
+      brand.destroy
+      BrandAlias.find_by_brand_id(brand.id).should be_nil
     end
 
   end

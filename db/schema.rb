@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110315222504) do
+ActiveRecord::Schema.define(:version => 20110315224147) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(:version => 20110315222504) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "brands_aliases", ["brand_id"], :name => "FK_brands_aliases_brand_id_brand_id"
 
   create_table "brands_campaigns", :force => true do |t|
     t.integer  "brand_id"

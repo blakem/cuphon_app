@@ -23,6 +23,7 @@ class Brand < ActiveRecord::Base
   belongs_to :merchant
   has_many :subscriptions, :foreign_key => 'brand_id', :primary_key => 'id', :dependent => :destroy
   has_many :brand_instants, :foreign_key => 'brand_id', :primary_key => 'id', :dependent => :destroy
+  has_many :brand_aliases, :foreign_key => 'brand_id', :primary_key => 'id', :dependent => :destroy
   
   after_initialize :init
   

@@ -29,3 +29,7 @@ end
 Factory.define :brand_instant do |instant|
   instant.association :brand, :factory => :brand
 end
+
+Factory.define :brand_alias do |brand_alias|
+  brand_alias.association :brand, :factory => :brand
+end
