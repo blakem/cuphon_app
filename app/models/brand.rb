@@ -30,14 +30,6 @@ class Brand < ActiveRecord::Base
     self.in_app   ||= 'false'
   end
   
-  def self.get_by_obj_or_string(brand)
-    if !brand.respond_to?(:id)
-      brand_str = brand
-      brand = Brand.find_by_title(brand)
-    end
-    brand
-  end
-    
   def brands_instants
     # has_many :brands_instants
     BrandsInstant.where(:brand_id => self.id)
@@ -58,23 +50,37 @@ class Brand < ActiveRecord::Base
     return false unless instant?
     self.brands_instants.any?
   end
-  
-  def self.get_or_create(title)
-    brand = self.find_by_title(title)
-    return brand if brand
-    brand = Brand.create(:title => title)
-    BrandsInstant.create(:brand_id => brand.id)
-    brand
-  end
-  
-  def self.find_by_fuzzy_match(string)
-    brand = find_by_title(string)
-    if brand.nil?
-      brand_alias = BrandsAlias.find_by_alias(string)
-      if !brand_alias.nil?
-        brand = brand_alias.brand
+
+  class << self
+    def get_by_obj_or_string(brand)
+      if !brand.respond_to?(:id)
+        brand_str = brand
+        brand = Brand.find_by_title(brand)
       end
+      brand
     end
-    return brand
+    
+    def get_or_create(title)
+      brand = self.find_by_title(title)
+      return brand if brand
+      brand = Brand.create(:title => title)
+      BrandsInstant.create(:brand_id => brand.id)
+      BrandsAlias.create(:alias => Brand.canonicalize_title(title))
+      brand
+    end
+  
+    def find_by_fuzzy_match(string)
+      brand = find_by_title(string)
+      unless brand
+        brand_alias = BrandsAlias.find_by_alias(string) || BrandsAlias.find_by_alias(Brand.canonicalize_title(string))
+        brand = brand_alias.brand if brand_alias
+      end
+      return brand
+    end
+  
+    def canonicalize_title(string)
+      return '' unless string
+      string.downcase.gsub(/\s+/, '').gsub(/[^[a-z0-9]]+/, '')
+    end
   end
 end

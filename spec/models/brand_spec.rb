@@ -90,4 +90,15 @@ describe Brand do
       brand.in_app.should == 'false'
     end
   end
+  
+  describe "canonicalize title" do
+    it "should handle caps punctuation and spaces" do
+      Brand.canonicalize_title('').should == ''
+      Brand.canonicalize_title(nil).should == ''
+      Brand.canonicalize_title('abc').should == 'abc'
+      Brand.canonicalize_title('ABC').should == 'abc'
+      Brand.canonicalize_title('  a  b   c    ').should == 'abc'
+      Brand.canonicalize_title('a!!!B---c').should == 'abc'
+    end
+  end
 end

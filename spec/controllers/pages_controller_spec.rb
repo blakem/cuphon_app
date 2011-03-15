@@ -180,7 +180,35 @@ describe PagesController do
           subscriber = Subscriber.find_by_device_id(phone)
           subscriber.is_subscribed?(brand).should be_true
         end
-      
+        
+        it "should create a canonical alias without spaces or punctuation and be in all lowercase" do
+          body = ' I  Like        JellyBeans! '
+          brand_created = 'I Like JellyBeans!'
+          canonical = 'ilikejellybeans'
+          phone = Factory.next(:phone)
+          post 'sms', @valid.merge(:Body => body, :From => phone )
+          tweak_response(response)
+          response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+          response.should have_selector('response>sms', :content => "been subscribed to #{brand_created}")
+          brand_alias = BrandsAlias.find_by_alias(canonical)
+          brand_alias.alias.should == canonical
+          brand = Brand.find_by_fuzzy_match(canonical)
+          brand_alias.brand.should == brand
+        end
+
+        it "should match a canonical alias without spaces or punctuation and be in all lowercase" do
+          body = ' I  LikE-JellyB  ea!!!ns '
+          brand_title = 'I Like JellyBeans!!'
+          canonical = 'ilikejellybeans'
+          subscriber = Factory(:subscriber)
+          brand = Factory(:brand, :title => brand_title)
+          BrandsAlias.create(:brand_id => brand.id, :alias => canonical)
+          post 'sms', @valid.merge(:Body => body, :From => subscriber.device_id )
+          tweak_response(response)
+          response.should have_selector('response>sms', :content => "been subscribed to #{brand_title}")
+          subscriber.is_subscribed?(brand).should be_true
+        end
+
         it "When creating a brand it should create a brand instant as well" do
           body = 'OriginalTastyPickles'
           phone = Factory.next(:phone)
