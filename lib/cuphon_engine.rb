@@ -4,29 +4,29 @@ module CuphonEngine
 
   class << self
 
-    def perform_action(subscriber, action, brand)
+    def perform_action(subscriber, action, brand, welcome)
       case action
       when 'JOIN', 'START'
-        perform_start_action(subscriber, brand)
+        perform_start_action(subscriber, brand, welcome)
       when 'END', 'STOP', 'QUIT', 'UNSUBSCRIBE', 'NO'
-        perform_stop_action(subscriber, brand)
+        perform_stop_action(subscriber, brand, welcome)
       when 'HELP'
         OutboundMessages.help_message
       when 'LIST'
-        perform_list_action(subscriber, brand)
+        perform_list_action(subscriber, brand, welcome)
       when 'RESETSTATUS'
-        perform_reset_action(subscriber, brand)
+        perform_reset_action(subscriber, brand, welcome)
       else
         OutboundMessages.sorry_message
       end
     end
 
     private
-      def perform_start_action(subscriber, brand)
+      def perform_start_action(subscriber, brand, welcome)
         if brand.nil? or brand == ''
           subscriber.active = 'true'
           subscriber.save
-          return OutboundMessages.restart_message
+          return welcome ? false : OutboundMessages.restart_message
         end
         return 'Profane' if ProfanityChecker.has_profane_word?(brand)
         if brand_obj = Brand.find_by_fuzzy_match(brand)
@@ -44,7 +44,7 @@ module CuphonEngine
         end
       end
     
-      def perform_stop_action(subscriber, brand)
+      def perform_stop_action(subscriber, brand, welcome)
         if brand.nil? or brand =~ /^all$/i
           subscriber.unsubscribe_all!
           OutboundMessages.unsubscribe_all_message
@@ -58,13 +58,13 @@ module CuphonEngine
         end
       end
       
-      def perform_reset_action(subscriber, brand)
+      def perform_reset_action(subscriber, brand, welcome)
         subscriber.unsubscribe!(*subscriber.brands)
         subscriber.destroy
         OutboundMessages.resetstatus_message
       end
       
-      def perform_list_action(subscriber, brand)
+      def perform_list_action(subscriber, brand, welcome)
         return OutboundMessages.list_none_message unless subscriber.active?
         brands = subscriber.brands
         return OutboundMessages.list_none_message if brands.empty?

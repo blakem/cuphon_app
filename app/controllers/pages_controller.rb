@@ -32,8 +32,9 @@ class PagesController < ApplicationController
     
     def build_messages(params)
        return [] if is_duplicate?(params)
-       [ welcome_message(params),
-         process_request(params) 
+       welcome = welcome_message(params)
+       [ welcome,
+         process_request(params, welcome) 
        ].select {|n| n}
     end
 
@@ -41,9 +42,9 @@ class PagesController < ApplicationController
       Subscriber.find_by_device_id(params[:From]) ? false : OutboundMessages.welcome_message
     end
 
-    def process_request(params)
+    def process_request(params, welcome)
       (action, brand) = parse_action_and_brand(params[:Body])
-      CuphonEngine.perform_action(Subscriber.find_or_create_by_device_id(params[:From]), action, brand)
+      CuphonEngine.perform_action(Subscriber.find_or_create_by_device_id(params[:From]), action, brand, welcome)
     end
     
     def parse_action_and_brand(string)

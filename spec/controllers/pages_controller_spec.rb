@@ -163,8 +163,17 @@ describe PagesController do
 
         it "should respond to garbled output with help message" do
           post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
-          tweak_response(response)
+          tweak_response(response, true)
           response.should have_selector('response>sms', :content => "You've been subscribed to") # How do we tell between garbage and real tags?
+        end
+        
+        it "should respond commands with a welcome message for a new user with a simple start message" do
+          post 'sms', @valid.merge(:Body => 'START', :From => Factory.next(:phone) + 'foobarbaz')
+          tweak_response(response)
+          response.should have_selector('response>sms', :content => 'Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help.')
+          response.should_not have_selector('response>sms', :content => 'been subscribed to')
+          response.should_not have_selector('response>sms', :content => 'Your subscriptions have been restarte')
+          QueuedMessage.all.count.should == 1
         end
       end
     end
