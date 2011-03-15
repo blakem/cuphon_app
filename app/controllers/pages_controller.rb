@@ -31,7 +31,7 @@ class PagesController < ApplicationController
     end
     
     def parse_action_and_brand(string)
-      return [nil, nil] unless string
+      return [nil, nil] if string.blank?
       string = string.split.join(' ')
       (action, brand) = string.split(/\s+/, 2)
       unless valid_actions.member?(action.upcase)
@@ -47,6 +47,6 @@ class PagesController < ApplicationController
     
     def is_duplicate?(params)
       previous = TwimlSmsRequest.find_all_by_From_and_Body(params[:From], params[:Body])
-      previous.select { |p| p.created_at > 10.minutes.ago }.length > 1
+      previous.select { |p| p.created_at > 1.minutes.ago }.length > 1
     end
 end

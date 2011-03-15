@@ -27,11 +27,29 @@ describe PagesController do
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1)
       end
-
-     it "should not crash w/o a body" do
+    
+      it "should not crash with an empty body" do
+        lambda do
+          invalid_args = @valid
+          invalid_args[:Body] = ""
+          post 'sms', invalid_args
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+      end
+      
+      it "should not crash with a missing body" do
         lambda do
           invalid_args = @valid
           invalid_args.delete(:Body)
+          post 'sms', invalid_args
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+      end
+      
+      it "should not crash with body of only whitespace" do
+        lambda do
+          invalid_args = @valid
+          invalid_args[:Body] = "            "
           post 'sms', invalid_args
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1) 
@@ -330,12 +348,12 @@ describe PagesController do
         QueuedMessage.all.length.should == 1
       end
 
-      it "should ignore messages from longer than 10 minutes ago" do
+      it "should ignore messages from longer than 1 minute ago" do
         brand = Factory(:brand, :title => 'SomethingNewerAndDifferent')
         subscriber = Factory(:subscriber)
         subscriber.subscribe!(brand)
         twiml = TwimlSmsRequest.create(:From => subscriber.device_id, :Body => "START #{brand.title}")
-        twiml.updated_at = twiml.created_at = 11.minutes.ago
+        twiml.updated_at = twiml.created_at = 2.minutes.ago
         twiml.save
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)

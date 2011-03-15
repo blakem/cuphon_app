@@ -21,6 +21,10 @@ describe ProfanityChecker do
     it "should check for anything that matches a certain pattern" do
       ProfanityChecker.is_profane?('blahblahFuckBlah').should == true      
     end
+
+    it "should tag 'sex' as profane" do
+      ProfanityChecker.is_profane?('sex').should == true      
+    end
   end
 
   describe "has_profane_word?" do

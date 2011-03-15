@@ -26,6 +26,7 @@ module ProfanityChecker
         gayct
         gaylips
         suck
+        sex
       )
     end
     
