@@ -442,6 +442,7 @@ describe PagesController do
         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
         response.should_not have_selector('response>sms', :content => "been subscribed to")
         response.body =~ /More: http:\/\/cphn.me\/([a-z0-9]{5})/
+
         short_url = ShortUrl.find_by_url($1)
         short_url.should_not be_nil
         
@@ -449,6 +450,27 @@ describe PagesController do
         QueuedMessage.where('body LIKE ? ', '%Cuphon from%').first.priority.should == 1
       end
       
+      it "should populate ShortUrl correctly" do
+        brand = Factory(:brand)
+        brand_instant = BrandsInstant.create(:brand_id => brand.id, 
+                                             :description => 'Come in for our new holiday lattes, buy one get one 50% off!',
+                                             :extended => 'lots more good information',
+                                             :image_url => 'http://blakem.com'
+                                             )
+        phone = Factory.next(:phone)
+        post 'sms', @valid.merge(:Body => brand.title, :From => phone)
+        tweak_response(response)
+        response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}: #{brand_instant.description} More: ")
+        response.body =~ /More: http:\/\/cphn.me\/([a-z0-9]{5})/
+
+        short_url = ShortUrl.find_by_url($1)
+        short_url.brand_title.should == brand.title
+        short_url.description.should == brand_instant.description
+        short_url.extended.should == brand_instant.extended
+        short_url.image_url.should == brand_instant.image_url
+        short_url.opened.should == 'false'
+      end
+
       it "should match on case insensitive" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
          brand_instant = BrandsInstant.create(:brand_id => brand.id)
