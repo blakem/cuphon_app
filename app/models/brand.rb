@@ -21,9 +21,9 @@ class Brand < ActiveRecord::Base
   after_initialize :init
   
   def init
-    self.instant  ||= false 
-    self.active ||= false
-    self.featured ||=  false
+    self.instant  ||= 'false' 
+    self.active ||= 'false'
+    self.featured ||=  'false'
   end
   
   def self.get_by_obj_or_string(brand)

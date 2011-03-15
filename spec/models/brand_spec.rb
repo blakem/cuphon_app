@@ -4,9 +4,9 @@ describe Brand do
   before(:each) do
     @valid = {
       :title => 'YummyPork',
-      :featured => true,
-      :instant => false,
-      :active => true
+      :featured => 'true',
+      :instant => 'false',
+      :active => 'true'
     }
   end
   
@@ -16,9 +16,9 @@ describe Brand do
       brand = Brand.create(@valid)
       brand.valid?.should be_true
       brand.title.should == 'YummyPork'
-      brand.featured.should be_true
-      brand.instant.should be_false
-      brand.active.should be_true
+      brand.featured.should == 'true'
+      brand.instant.should  == 'false'
+      brand.active.should   == 'true'
     end
     
     it "should be findable" do
@@ -78,12 +78,14 @@ describe Brand do
   describe "default values" do
     it "should set instant/featured/active to false" do
       brand = Brand.create
-      brand.instant.should_not be_nil
-      brand.instant.should     be_false
-      brand.featured.should_not be_nil
-      brand.featured.should     be_false
-      brand.active.should_not be_nil
-      brand.active.should     be_false
+      brand.instant.should  == 'false'
+      brand.active.should   == 'false'
+      brand.featured.should == 'false'
+
+      brand.reload
+      brand.instant.should  == 'false'
+      brand.active.should   == 'false'
+      brand.featured.should == 'false'
     end
   end
 end

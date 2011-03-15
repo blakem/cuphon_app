@@ -13,8 +13,16 @@
 #
 
 class Subscriber < ActiveRecord::Base
+  def self.inheritance_column() 'my_type' end
   has_many :subscriptions, :foreign_key => 'device_id', :primary_key => 'device_id'
-
+  after_initialize :init
+  
+  def init
+    self.active ||= 'true'
+    self.type ||=  'sms'
+  end
+  
+  
   def brands
     # has_many :brands, :through => :subscriptions
     self.subscriptions.map{ |s| s.brand }

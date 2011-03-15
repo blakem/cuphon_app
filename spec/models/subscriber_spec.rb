@@ -92,4 +92,16 @@ describe Subscriber do
     subscriber2 = Factory(:subscriber)
     subscriber1.device_id.should_not == subscriber2.device_id
   end
+
+  describe "default values" do
+    it "should set type to 'sms' and active to true" do
+      subscriber = Subscriber.create
+      subscriber.active.should == 'true'
+      subscriber.type.should == 'sms'
+
+      subscriber.reload
+      subscriber.active.should == 'true'
+      subscriber.type.should == 'sms'
+    end
+  end
 end
