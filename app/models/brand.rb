@@ -63,7 +63,7 @@ class Brand < ActiveRecord::Base
     def get_or_create(title)
       brand = self.find_by_title(title)
       return brand if brand
-      brand = Brand.create(:title => title)
+      brand = Brand.create(:title => Brand.canonicalize_title_for_brand(title))
       BrandsInstant.create(:brand_id => brand.id)
       BrandsAlias.create(:alias => Brand.canonicalize_title(title), :brand_id => brand.id)
       brand
@@ -78,9 +78,15 @@ class Brand < ActiveRecord::Base
       return brand
     end
   
-    def canonicalize_title(string)
+    def canonicalize_title(string) # XXX belongs in BrandsAlias
       return '' unless string
       string.downcase.gsub(/\s+/, '').gsub(/[^[a-z0-9]]+/, '')
     end
+
+    def canonicalize_title_for_brand(title)
+      return '' unless title 
+      title.split.map { |w| a = w.split(//); a[0] = a[0].upcase; a.join('') }.join(' ')
+    end
+    
   end
 end

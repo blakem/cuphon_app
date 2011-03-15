@@ -101,4 +101,15 @@ describe Brand do
       Brand.canonicalize_title('a!!!B---c').should == 'abc'
     end
   end
+
+  describe "canonicalize title for brand" do
+    it "should capitalize each word" do
+      Brand.canonicalize_title_for_brand('').should == ''
+      Brand.canonicalize_title_for_brand(nil).should == ''
+      Brand.canonicalize_title_for_brand('abc').should == 'Abc'
+      Brand.canonicalize_title_for_brand('ABC').should == 'ABC'
+      Brand.canonicalize_title_for_brand('  a  b   c    ').should == 'A B C'
+      Brand.canonicalize_title_for_brand('McDonalds TacoBell muffins').should == 'McDonalds TacoBell Muffins'
+    end
+  end
 end

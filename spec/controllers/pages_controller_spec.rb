@@ -221,6 +221,17 @@ describe PagesController do
           end.should change(BrandsInstant, :count).by(1)
         end
 
+        it "When creating a brand it should Upercase each word" do
+          body = ' fancy  yummy good     muffin    '
+          brand_title = 'Fancy Yummy Good Muffin'
+          subscriber = Factory(:subscriber)
+          post 'sms', @valid.merge(:Body => body, :From => subscriber.device_id )
+          tweak_response(response)
+          response.should have_selector('response>sms', :content => "been subscribed to #{brand_title}")
+          brand = Brand.find_by_title(brand_title)
+          brand.title.should == brand_title
+          subscriber.is_subscribed?(brand).should be_true
+        end
       end
 
       describe "when they already exist" do

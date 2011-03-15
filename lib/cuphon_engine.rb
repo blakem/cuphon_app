@@ -34,7 +34,8 @@ module CuphonEngine
           end
         else
           subscriber.subscribe!(brand)
-          OutboundMessages.subscribed_message(brand)
+          brand_obj = Brand.find_by_fuzzy_match(brand)
+          OutboundMessages.subscribed_message(brand_obj ? brand_obj.title : brand)
         end
       end
     
