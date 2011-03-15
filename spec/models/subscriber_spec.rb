@@ -172,4 +172,21 @@ describe Subscriber do
       subscriber.is_subscribed?(brand3).should be_true
     end
   end
+  
+  describe "brands" do
+    it "should handle stale data" do
+      brand1 = Factory(:brand)
+      brand2 = Factory(:brand)
+      brand3 = Factory(:brand)
+      subscriber = Factory(:subscriber)
+      subscriber.subscribe!(brand1, brand2, brand3)
+      subscriber.brands.length.should == 3
+      
+      brand1.destroy
+      subscriber.reload
+      subscriber.brands.length.should == 2
+      subscriber.brands.should include(brand2)
+      subscriber.brands.should include(brand3)
+    end
+  end
 end

@@ -20,12 +20,11 @@ class Subscriber < ActiveRecord::Base
   def init
     self.active ||= 'true'
     self.type ||=  'sms'
-  end
-  
+  end  
   
   def brands
     # has_many :brands, :through => :subscriptions
-    self.subscriptions.map{ |s| s.brand }
+    self.subscriptions.map{ |s| s.brand }.select { |b| b }
   end
 
   def subscribe!(*brands)
