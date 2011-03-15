@@ -4,7 +4,12 @@ class PagesController < ApplicationController
   def sms
     twiml = TwimlSmsRequest.create_from_params(params)
     @messages = build_messages(params)
-    twiml.response = @messages.join( '|||' );
+    if @messages[0] == 'Profane'
+      @messages = []
+      twiml.response = 'Profane - No response sent'
+    else
+      twiml.response = @messages.join( '|||' );
+    end
     twiml.save
     @messages.each do |m|
       priority = m =~ /Welcome/ ? 2 : 1

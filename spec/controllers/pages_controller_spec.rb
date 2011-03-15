@@ -412,6 +412,8 @@ describe PagesController do
          subscriber.reload
          subscriber.is_subscribed?(msg).should be_false
          Brand.find_by_title(msg).should be_nil
+         twiml = TwimlSmsRequest.find_by_From(subscriber.device_id)
+         twiml.response.should == 'Profane - No response sent'
        end
 
        it "should ignore 'sentences with MILF in them'" do
