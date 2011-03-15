@@ -193,6 +193,7 @@ describe PagesController do
           brand_alias = BrandsAlias.find_by_alias(canonical)
           brand_alias.alias.should == canonical
           brand = Brand.find_by_fuzzy_match(canonical)
+          brand.title.should == brand_created
           brand_alias.brand.should == brand
         end
 

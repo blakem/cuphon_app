@@ -65,7 +65,7 @@ class Brand < ActiveRecord::Base
       return brand if brand
       brand = Brand.create(:title => title)
       BrandsInstant.create(:brand_id => brand.id)
-      BrandsAlias.create(:alias => Brand.canonicalize_title(title))
+      BrandsAlias.create(:alias => Brand.canonicalize_title(title), :brand_id => brand.id)
       brand
     end
   
