@@ -17,5 +17,5 @@
 #
 
 class Merchant < ActiveRecord::Base
-  has_many :brands
+  has_many :brands, :dependent => :destroy
 end
