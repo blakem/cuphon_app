@@ -24,9 +24,9 @@ describe Brand do
     it "should be findable" do
       Brand.create(@valid)
       Brand.find_by_title(@valid[:title]).should_not be_nil
-      Brand.where(:featured => true).should_not be_nil
-      Brand.where(:instant => false).should_not be_nil
-      Brand.where(:active => true).should_not be_nil      
+      Brand.where(:featured => 'true').should_not be_nil
+      Brand.where(:instant => 'false').should_not be_nil
+      Brand.where(:active => 'true').should_not be_nil      
     end
   end
 
@@ -58,7 +58,7 @@ describe Brand do
     end
     
     it "should have a has_active_instant method" do
-      brand = Factory(:brand, :instant => false)
+      brand = Factory(:brand, :instant => "false")
       brand.instant?.should be_false
       brand.reload
       brand.instant?.should be_false      
@@ -67,7 +67,7 @@ describe Brand do
       BrandsInstant.create(:brand_id => brand.id)
       brand.has_active_instant?.should be_false
 
-      brand.instant = true
+      brand.instant = "true"
       brand.has_active_instant?.should be_true      
       brand.save
       brand.reload

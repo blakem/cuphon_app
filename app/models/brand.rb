@@ -46,8 +46,12 @@ class Brand < ActiveRecord::Base
     OutboundMessages.instant_cuphon_message(self.title, instant.description, short_url)
   end
   
+  def instant?
+    self.instant == "true"  
+  end
+  
   def has_active_instant?
-    return false unless instant?
+    return false unless self.instant?
     self.brands_instants.any?
   end
 
