@@ -63,6 +63,6 @@ class PagesController < ApplicationController
     
     def is_duplicate?(params)
       previous = TwimlSmsRequest.find_all_by_From_and_Body(params[:From], params[:Body])
-      previous.select { |p| p.created_at > 1.minutes.ago }.length > 1
+      previous.select { |p| p.created_at > 1.minutes.ago }.select { |p| p.Body == params[:Body] }.length > 1
     end
 end

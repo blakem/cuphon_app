@@ -421,6 +421,20 @@ describe PagesController do
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         QueuedMessage.all.length.should == 1
       end
+      
+      it "should only treat case sensitve matches as duplicates" do
+        brand = Factory(:brand, :title => 'SomethingNewAndDifferent')
+        subscriber = Factory(:subscriber)
+        subscriber.subscribe!(brand)
+        post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
+        post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
+        post 'sms', @valid.merge(:Body => "STaRT #{brand.title}", :From => subscriber.device_id)
+        QueuedMessage.all.length.should == 2
+        twimls = TwimlSmsRequest.all
+        twimls.count.should == 3
+        twimls.select { |t| t.response =~ /already/ }.count.should == 2
+        twimls.select { |t| t.response =~ /Ignored/ }.count.should == 1
+      end
     end
 
     describe "Ignore profanity" do
