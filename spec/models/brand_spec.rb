@@ -81,11 +81,13 @@ describe Brand do
       brand.instant.should  == 'false'
       brand.active.should   == 'false'
       brand.featured.should == 'false'
+      brand.in_app.should   == 'false'
 
       brand.reload
       brand.instant.should  == 'false'
       brand.active.should   == 'false'
       brand.featured.should == 'false'
+      brand.in_app.should == 'false'
     end
   end
 end

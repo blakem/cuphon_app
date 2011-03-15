@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110312023249
+# Schema version: 20110314110640
 #
 # Table name: merchants
 #
@@ -12,11 +12,6 @@
 #  keyword      :string(255)
 #  ip_address   :string(255)
 #  setup_key    :string(255)
-#  cc_number    :string(255)
-#  cc_month     :string(255)
-#  cc_year      :string(255)
-#  cc_code      :string(255)
-#  cc_updated   :integer(4)
 #  created_at   :datetime
 #  updated_at   :datetime
 #

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110312023249
+# Schema version: 20110314110640
 #
 # Table name: brands
 #
@@ -11,6 +11,9 @@
 #  featured    :string(0)
 #  instant     :string(0)
 #  active      :string(0)
+#  longitude   :string(255)
+#  latitude    :string(255)
+#  in_app      :string(0)       default("false")
 #
 
 class Brand < ActiveRecord::Base
@@ -22,8 +25,9 @@ class Brand < ActiveRecord::Base
   
   def init
     self.instant  ||= 'false' 
-    self.active ||= 'false'
-    self.featured ||=  'false'
+    self.active   ||= 'false'
+    self.featured ||= 'false'
+    self.in_app   ||= 'false'
   end
   
   def self.get_by_obj_or_string(brand)

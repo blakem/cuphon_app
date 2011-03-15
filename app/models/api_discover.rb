@@ -15,4 +15,10 @@
 
 class ApiDiscover < ActiveRecord::Base
   def self.table_name() "api_discover" end
+  after_initialize :init
+
+  def init
+    self.instant  ||= 'false' 
+    self.featured ||=  'false'
+  end
 end
