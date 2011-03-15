@@ -31,7 +31,7 @@ describe ShortUrlGenerator do
         return @@words.shift
       end
     end
-    ShortUrl.create(:url => 'http://cphn.me/FOOBAR')
+    ShortUrl.create(:url => 'FOOBAR')
     url = ShortUrlGenerator.short_url
     url.should == 'http://cphn.me/BAZQUX'
   end

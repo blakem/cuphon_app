@@ -41,8 +41,8 @@ class Brand < ActiveRecord::Base
   
   def send_active_message
     instant = self.brands_instants.first # xxx sort by updated_at time
-    short_url = ShortUrlGenerator.short_url
-    ShortUrl.create(:url => short_url)
+    (short_url, base) = ShortUrlGenerator.short_url_and_base
+    ShortUrl.create(:url => base)
     OutboundMessages.instant_cuphon_message(self.title, instant.description, short_url)
   end
   
