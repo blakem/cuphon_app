@@ -83,6 +83,13 @@ describe PagesController do
 
     describe "basic commands" do
 
+      it "should not actually send any replys" do
+        post 'sms', @valid.merge(:Body => 'START')
+        response.should_not have_selector('response>sms')
+        tweak_response(response)
+        response.should have_selector('response>sms', :content => "Welcome")        
+      end
+      
       it "should respond to START" do
         post 'sms', @valid.merge(:Body => 'START')
         tweak_response(response)

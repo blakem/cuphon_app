@@ -3,25 +3,36 @@ class PagesController < ApplicationController
   
   def sms
     twiml = TwimlSmsRequest.create_from_params(params)
-    @messages = build_messages(params)
-    if @messages.empty?
-      twiml.response = 'Ignored'
-    elsif @messages[0] == 'Profane'
-      @messages = []
-      twiml.response = 'Profane - No response sent'
-    else
-      twiml.response = @messages.join( '|||' );
+    begin
+      run_sms_request(twiml, params)
+    rescue Exception => e
+      twiml.response = "ERROR: " + e.message
+      twiml.save
+      # puts e.message  
+      # puts e.backtrace.inspect  
     end
-    twiml.save
-    @messages.each do |m|
-      priority = m =~ /Welcome/ ? 2 : 1
-      QueuedMessage.create(:device_id => params[:From], :body => m, :priority => priority)
-    end
-    @messages = []   # Don't send any response back through the reply
+    @messages = []
   end
 
   private
-     def build_messages(params)
+  
+    def run_sms_request(twiml, params)
+      messages = build_messages(params)
+      if messages.empty?
+        twiml.response = 'Ignored'
+      elsif messages[0] == 'Profane'
+        twiml.response = 'Profane - No response sent'
+      else
+        twiml.response = messages.join( '|||' );
+        messages.each do |m|
+          priority = m =~ /Welcome/ ? 2 : 1
+          QueuedMessage.create(:device_id => params[:From], :body => m, :priority => priority)
+        end
+      end
+      twiml.save
+    end
+    
+    def build_messages(params)
        return [] if is_duplicate?(params)
        [ welcome_message(params),
          process_request(params) 
