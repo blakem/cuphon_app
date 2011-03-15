@@ -26,6 +26,6 @@ Factory.define :subscriber do |s|
   s.sequence(:device_id) { Factory.next(:phone) }
 end
 
-Factory.define :brands_instant do |instant|
+Factory.define :brand_instant do |instant|
   instant.association :brand, :factory => :brand
 end

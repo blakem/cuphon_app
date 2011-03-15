@@ -32,7 +32,7 @@ class Brand < ActiveRecord::Base
   
   def brands_instants
     # has_many :brands_instants
-    BrandsInstant.where(:brand_id => self.id)
+    BrandInstant.where(:brand_id => self.id)
   end
   
   def send_active_message
@@ -68,7 +68,7 @@ class Brand < ActiveRecord::Base
       brand = self.find_by_title(title)
       return brand if brand
       brand = Brand.create(:title => Brand.canonicalize_title(title))
-      BrandsInstant.create(:brand_id => brand.id)
+      BrandInstant.create(:brand_id => brand.id)
       BrandAlias.create(:alias => BrandAlias.canonicalize_alias(title), :brand_id => brand.id)
       brand
     end

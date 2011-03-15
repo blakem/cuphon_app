@@ -4,7 +4,7 @@ describe PagesController do
   render_views
   
   after(:each) do
-    BrandsInstant.all.each { |o| o.destroy }
+    BrandInstant.all.each { |o| o.destroy }
     Brand.all.each { |o| o.destroy }
     Subscriber.all.each { |o| o.destroy }
     QueuedMessage.all.each { |o| o.destroy }
@@ -219,7 +219,7 @@ describe PagesController do
             tweak_response(response)
             response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
             response.should have_selector('response>sms', :content => "been subscribed to #{body}")
-          end.should change(BrandsInstant, :count).by(1)
+          end.should change(BrandInstant, :count).by(1)
         end
 
         it "When creating a brand it should Upercase each word" do
@@ -478,7 +478,7 @@ describe PagesController do
       it "should send an instant coupon when one is found" do
         # "Cuphon from Starbucks: Come in for our new holiday lattes, buy one get one 50% off!. More: http://cphn.me/sbux1"
         brand = Factory(:brand)
-        brand_instant = BrandsInstant.create(:brand_id => brand.id, 
+        brand_instant = BrandInstant.create(:brand_id => brand.id, 
                                              :description => 'Come in for our new holiday lattes, buy one get one 50% off!')
         phone = Factory.next(:phone)
         post 'sms', @valid.merge(:Body => brand.title, :From => phone)
@@ -499,7 +499,7 @@ describe PagesController do
       
       it "should populate ShortUrl correctly" do
         brand = Factory(:brand)
-        brand_instant = BrandsInstant.create(:brand_id => brand.id, 
+        brand_instant = BrandInstant.create(:brand_id => brand.id, 
                                              :description => 'Come in for our new holiday lattes, buy one get one 50% off!',
                                              :extended => 'lots more good information',
                                              :image_url => 'http://blakem.com'
@@ -520,7 +520,7 @@ describe PagesController do
 
       it "should match on case insensitive" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
-         brand_instant = BrandsInstant.create(:brand_id => brand.id)
+         brand_instant = BrandInstant.create(:brand_id => brand.id)
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join wikiWOOworkShop   ', :From => phone)
          tweak_response(response)
@@ -532,7 +532,7 @@ describe PagesController do
 
       it "should not match if instant is disabled on the brand" do
          brand = Factory(:brand, :title => 'MyInstantsAreOff', :instant => false)
-         brand_instant = BrandsInstant.create(:brand_id => brand.id)
+         brand_instant = BrandInstant.create(:brand_id => brand.id)
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => 'JOIN MyInstantsAreOff', :From => phone)
          tweak_response(response)
@@ -543,7 +543,7 @@ describe PagesController do
 
       it "should match on an alias with an instant coupon" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
-         brand_instant = BrandsInstant.create(:brand_id => brand.id)
+         brand_instant = BrandInstant.create(:brand_id => brand.id)
          brand_alias = BrandAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)

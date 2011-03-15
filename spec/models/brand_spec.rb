@@ -52,7 +52,7 @@ describe Brand do
 
   describe "brands_instant relationship" do
     it "should have a brands_instant method" do
-      instant = Factory(:brands_instant)
+      instant = Factory(:brand_instant)
       brand = instant.brand
       brand.brands_instants.should include(instant)      
     end
@@ -64,7 +64,7 @@ describe Brand do
       brand.instant?.should be_false      
       brand.has_active_instant?.should be_false
       
-      BrandsInstant.create(:brand_id => brand.id)
+      BrandInstant.create(:brand_id => brand.id)
       brand.has_active_instant?.should be_false
 
       brand.instant = "true"
