@@ -198,5 +198,16 @@ describe Subscriber do
       subscriber.destroy
       QueuedMessage.find_by_id(queued.id).should_not be_nil
     end
+
+    it "should destroy its subscriptions on deletion" do
+      subscriber = Factory(:subscriber)
+      brand = Factory(:brand)
+      subscriber.subscribe!(brand)
+      subscription = Subscription.find_by_device_id_and_brand_id(subscriber.device_id, brand.id)
+      subscription.device_id.should == subscriber.device_id
+      subscriber.destroy
+      Subscription.find_by_id(subscription.id).should be_nil
+    end
+
   end
 end

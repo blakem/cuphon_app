@@ -14,7 +14,7 @@
 
 class Subscriber < ActiveRecord::Base
   def self.inheritance_column() 'my_type' end
-  has_many :subscriptions, :foreign_key => 'device_id', :primary_key => 'device_id'
+  has_many :subscriptions, :foreign_key => 'device_id', :primary_key => 'device_id', :dependent => :destroy
   has_many :queued_messages, :foreign_key => 'device_id', :primary_key => 'device_id'
   
   after_initialize :init
