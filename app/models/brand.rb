@@ -22,6 +22,7 @@ class Brand < ActiveRecord::Base
   
   belongs_to :merchant
   has_many :subscriptions, :foreign_key => 'brand_id', :primary_key => 'id', :dependent => :destroy
+  has_many :brand_instants, :foreign_key => 'brand_id', :primary_key => 'id', :dependent => :destroy
   
   after_initialize :init
   
@@ -32,13 +33,13 @@ class Brand < ActiveRecord::Base
     self.in_app   ||= 'false'
   end
   
-  def brands_instants
-    # has_many :brands_instants
-    BrandInstant.where(:brand_id => self.id)
-  end
+  # def brands_instants
+  #   # has_many :brands_instants
+  #   BrandInstant.where(:brand_id => self.id)
+  # end
   
   def send_active_message
-    instant = self.brands_instants.first # xxx sort by updated_at time
+    instant = self.brand_instants.first # xxx sort by updated_at time
     (short_url, base) = ShortUrlGenerator.short_url_and_base
     ShortUrl.create(:url => base, 
                     :brand_title => self.title, 
@@ -54,7 +55,7 @@ class Brand < ActiveRecord::Base
   
   def has_active_instant?
     return false unless self.instant?
-    self.brands_instants.any?
+    self.brand_instants.any?
   end
 
   class << self

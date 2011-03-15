@@ -54,7 +54,7 @@ describe Brand do
     it "should have a brands_instant method" do
       instant = Factory(:brand_instant)
       brand = instant.brand
-      brand.brands_instants.should include(instant)      
+      brand.brand_instants.should include(instant)      
     end
     
     it "should have a has_active_instant method" do
@@ -112,5 +112,13 @@ describe Brand do
       brand.destroy
       Subscription.find_by_id(subscription.id).should be_nil
     end
+
+    it "should destroy its brand_instants on deletion" do
+      brand = Factory(:brand)
+      instant = Factory(:brand_instant, :brand_id => brand.id)
+      brand.destroy
+      BrandInstant.find_by_brand_id(brand.id).should be_nil
+    end
+
   end
 end
