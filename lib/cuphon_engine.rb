@@ -25,7 +25,7 @@ module CuphonEngine
       def perform_start_action(subscriber, brand)
         return false if ProfanityChecker.has_profane_word?(brand)
         if brand_obj = Brand.find_by_fuzzy_match(brand)
-          return OutboundMessages.already_subscribed_message(brand) if subscriber.is_subscribed?(brand_obj)
+          return OutboundMessages.already_subscribed_message(brand_obj.title) if subscriber.is_subscribed?(brand_obj)
           subscriber.subscribe!(brand_obj)
           if brand_obj.has_active_instant?
             brand_obj.send_active_message
