@@ -25,7 +25,7 @@ class Subscriber < ActiveRecord::Base
     
     if !brand.respond_to?(:id)
       brand_str = brand
-      brand = Brand.find_or_create_by_title(brand)
+      brand = Brand.get_or_create(brand)
     end
 
     Subscription.create(:device_id => self.device_id, :brand_id => brand.id, :brand_title => brand.title)

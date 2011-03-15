@@ -17,6 +17,10 @@ describe ProfanityChecker do
     it "should check for words in the dictionary" do
       ProfanityChecker.is_profane?('porn').should == true      
     end
+
+    it "should check for anything that matches a certain pattern" do
+      ProfanityChecker.is_profane?('blahblahFuckBlah').should == true      
+    end
   end
 
   describe "has_profane_word?" do

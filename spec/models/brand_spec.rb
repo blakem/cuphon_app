@@ -58,11 +58,20 @@ describe Brand do
     end
     
     it "should have a has_active_instant method" do
-      brand = Factory(:brand)
+      brand = Factory(:brand, :instant => false)
+      brand.instant?.should be_false
+      brand.reload
+      brand.instant?.should be_false      
       brand.has_active_instant?.should be_false
       
       BrandsInstant.create(:brand_id => brand.id)
-      brand.has_active_instant?.should be_true
+      brand.has_active_instant?.should be_false
+
+      brand.instant = true
+      brand.has_active_instant?.should be_true      
+      brand.save
+      brand.reload
+      brand.has_active_instant?.should be_true      
     end
   end
 end

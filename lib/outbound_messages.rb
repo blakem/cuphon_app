@@ -24,5 +24,11 @@ module OutboundMessages
     def sorry_message
       "Sorry, we didn't understand your message. Reply HELP for help. Reply STOP to cancel messages."
     end
+    def instant_cuphon_message(brand, description, url)
+      "Cuphon from #{brand}: #{description} More: #{url}"
+    end
+    def already_subscribed_message(brand)
+      "You are already subscribed to #{brand}."
+    end
   end 
 end
