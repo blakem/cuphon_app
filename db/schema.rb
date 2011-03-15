@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110314110640) do
+ActiveRecord::Schema.define(:version => 20110315193759) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -177,6 +177,8 @@ ActiveRecord::Schema.define(:version => 20110314110640) do
     t.string   "type",       :limit => 0
     t.string   "active",     :limit => 0
   end
+
+  add_index "subscribers", ["device_id"], :name => "subscribers_device_id_idx"
 
   create_table "subscriptions", :force => true do |t|
     t.string   "brand_title"
