@@ -145,7 +145,7 @@ describe PagesController do
       it "should respond to LIST" do
         post 'sms', @valid.merge(:Body => 'LIST')
         tweak_response(response)
-        response.should have_selector('response>sms', :content => "Your are not subscribed to any merchants.")        
+        response.should have_selector('response>sms', :content => "You are not subscribed to any brands.")        
       end
 
       describe "variations on commands" do
@@ -496,11 +496,18 @@ describe PagesController do
         subscriber = Factory(:subscriber)
         subscriber.subscribe!(brand1, brand2, brand3)
         post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'LIST')
-        tweak_response(response)
-        response.should have_selector('response>sms', :content => "Your are subscribed to:")
+        tweak_response(response, true)
+        response.should have_selector('response>sms', :content => "You are subscribed to:")
         response.should have_selector('response>sms', :content => brand1.title)
         response.should have_selector('response>sms', :content => brand2.title)
         response.should have_selector('response>sms', :content => brand3.title)
+        
+        subscriber.active = 'false'
+        subscriber.save
+        post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'LiSt')
+        tweak_response(response)
+        response.should have_selector('response>sms', :content => "You are not subscribed to any brands.")
+        
       end      
     end
     

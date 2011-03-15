@@ -65,6 +65,7 @@ module CuphonEngine
       end
       
       def perform_list_action(subscriber, brand)
+        return OutboundMessages.list_none_message unless subscriber.active?
         brands = subscriber.brands
         return OutboundMessages.list_none_message if brands.empty?
         return OutboundMessages.list_cuphons_message(brands)

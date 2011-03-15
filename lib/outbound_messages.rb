@@ -31,10 +31,10 @@ module OutboundMessages
       "You are already subscribed to #{brand}."
     end
     def list_none_message
-      "Your are not subscribed to any merchants."
+      "You are not subscribed to any brands."
     end
     def list_cuphons_message(brands)
-      "Your are subscribed to: #{brands.map { |b| b.title }.join(', ')}"
+      "You are subscribed to: #{brands.map { |b| b.title }.join(', ')}"
     end
     def restart_message
       "Welcome back! Your subscriptions have been restarted again."
