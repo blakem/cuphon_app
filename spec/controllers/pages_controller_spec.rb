@@ -115,6 +115,11 @@ describe PagesController do
         tweak_response(response)
         response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")        
       end
+      it "should respond to LIST" do
+        post 'sms', @valid.merge(:Body => 'LIST')
+        tweak_response(response)
+        response.should have_selector('response>sms', :content => "Your are not subscribed to any Cuphons.")        
+      end
 
       describe "variations on commands" do
         it "should respond commands with spaces and caps" do
@@ -198,6 +203,8 @@ describe PagesController do
       %w[STOP QUIT UNSUBSCRIBE END].each do |cmd|
         it "should unsubscribe on '#{cmd} BRAND'" do
           brand = Factory(:brand)
+          brand.title += cmd
+          brand.save
           subscriber = Factory(:subscriber)
           subscriber.subscribe!(brand)
           post 'sms', @valid.merge(:Body => "#{cmd} #{brand.title}", :From => subscriber.device_id)
@@ -384,6 +391,22 @@ describe PagesController do
         Subscription.find_by_device_id_and_brand_id(device_id, brand.id).should be_nil
         Subscriber.find_by_device_id(device_id).should be_nil
       end
+    end
+
+    describe "LIST command" do
+      it "should list the groups you are subscribed to" do
+        brand1 = Factory(:brand)
+        brand2 = Factory(:brand)
+        brand3 = Factory(:brand)
+        subscriber = Factory(:subscriber)
+        subscriber.subscribe!(brand1, brand2, brand3)
+        post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'LIST')
+        tweak_response(response)
+        response.should have_selector('response>sms', :content => "Your are subscribed to 3 Cuphons:")        
+        response.should have_selector('response>sms', :content => brand1.title)
+        response.should have_selector('response>sms', :content => brand2.title)
+        response.should have_selector('response>sms', :content => brand3.title)
+      end      
     end
     
     describe "instant coupon" do

@@ -30,5 +30,11 @@ module OutboundMessages
     def already_subscribed_message(brand)
       "You are already subscribed to #{brand}."
     end
+    def list_none_message
+      "Your are not subscribed to any Cuphons."
+    end
+    def list_cuphons_message(brands)
+      "Your are subscribed to #{brands.count} Cuphons: #{brands.map { |b| b.title }.join(', ')}"
+    end
   end 
 end

@@ -20,22 +20,16 @@ class Subscriber < ActiveRecord::Base
     self.subscriptions.map{ |s| s.brand }
   end
 
-  def subscribe!(brand)
-    return unless brand
-    
-    if !brand.respond_to?(:id)
-      brand_str = brand
-      brand = Brand.get_or_create(brand)
+  def subscribe!(*brands)
+    brands.each do |brand|
+      subscribe_to_brand!(brand)
     end
-
-    Subscription.create(:device_id => self.device_id, :brand_id => brand.id, :brand_title => brand.title)
   end
 
-  def unsubscribe!(brand)
-    brand = Brand.get_by_obj_or_string(brand)
-    return unless brand
-    subscription = subscriptions.find_by_brand_id(brand.id)
-    subscription.destroy if subscription    
+  def unsubscribe!(*brands)
+    brands.each do |brand|
+      unsubscribe_to_brand!(brand)
+    end
   end
   
   def unsubscribe_all!
@@ -49,4 +43,25 @@ class Subscriber < ActiveRecord::Base
     return unless brand
     self.brands.include?(brand)
   end
+  
+  private
+
+    def subscribe_to_brand!(brand)
+      return unless brand
+    
+      if !brand.respond_to?(:id)
+        brand_str = brand
+        brand = Brand.get_or_create(brand)
+      end
+
+      Subscription.create(:device_id => self.device_id, :brand_id => brand.id, :brand_title => brand.title)
+    end
+
+    def unsubscribe_to_brand!(brand)
+      brand = Brand.get_by_obj_or_string(brand)
+      return unless brand
+      subscription = subscriptions.find_by_brand_id(brand.id)
+      subscription.destroy if subscription    
+    end
+  
 end

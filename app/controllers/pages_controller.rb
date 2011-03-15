@@ -42,7 +42,7 @@ class PagesController < ApplicationController
     end
 
     def valid_actions
-      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS NO]
+      %w[START JOIN HELP STOP QUIT UNSUBSCRIBE END RESETSTATUS NO LIST]
     end
     
     def is_duplicate?(params)

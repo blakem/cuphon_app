@@ -13,7 +13,25 @@ describe Subscriber do
 
     subscriber.unsubscribe!(brand) # Don't crash when already unsubscribed
     subscriber.reload
-    subscriber.brands.should_not include(brand)    
+    subscriber.brands.should_not include(brand)
+  end
+  
+  it "should be able to subscribe and unsubscribe to may brands at once" do
+    brand1 = Factory(:brand)
+    brand2 = Factory(:brand)
+    brand3 = Factory(:brand)
+    subscriber = Factory(:subscriber)
+    subscriber.reload
+    subscriber.subscribe!(brand1, brand2, brand3)
+    subscriber.is_subscribed?(brand1).should be_true
+    subscriber.is_subscribed?(brand2).should be_true
+    subscriber.is_subscribed?(brand3).should be_true
+
+    subscriber.unsubscribe!(brand1, brand2, brand3)
+    subscriber.reload
+    subscriber.is_subscribed?(brand1).should be_false
+    subscriber.is_subscribed?(brand2).should be_false
+    subscriber.is_subscribed?(brand3).should be_false
   end
   
   it "should be able to subscribe and unsubscribe with strings" do

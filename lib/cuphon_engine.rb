@@ -12,6 +12,8 @@ module CuphonEngine
         perform_stop_action(subscriber, brand)
       when 'HELP'
         OutboundMessages.help_message
+      when 'LIST'
+        perform_list_action(subscriber, brand)
       when 'RESETSTATUS'
         perform_reset_action(subscriber, brand)
       else
@@ -54,6 +56,12 @@ module CuphonEngine
         subscriber.unsubscribe_all!
         subscriber.destroy
         OutboundMessages.resetstatus_message
+      end
+      
+      def perform_list_action(subscriber, brand)
+        brands = subscriber.brands
+        return OutboundMessages.list_none_message if brands.empty?
+        return OutboundMessages.list_cuphons_message(brands)
       end
   end  
 end
