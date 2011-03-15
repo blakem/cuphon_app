@@ -13,7 +13,7 @@ module OutboundMessages
       "Your subscriptions have been suspended. You will no longer receive coupon offers! To activate your subscriptions, reply with START at any time! Thx, Cuphon.com"
     end
     def unsubscribe_message(brand)
-      "Your subscription to #{brand} has been suspended. You will no longer receive coupon offers! To activate your subscription, reply with START #{brand} at any time! Thx, Cuphon.com"
+      "Your subscription to #{brand} has been suspended. To activate your subscription, reply with START #{brand} at any time! Thx, Cuphon.com"
     end
     def not_currently_subscribed_message(brand)
       "You are not currently subscribed to #{brand}."
