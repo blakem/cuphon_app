@@ -15,11 +15,6 @@ Factory.define :merchant do |merchant|
   merchant.keyword               "FancyGlasses"
   merchant.ip_address            "10.10.10.10"
   merchant.setup_key             "ASFAWEFADSF"
-  merchant.cc_number             "???"
-  merchant.cc_month              "???"
-  merchant.cc_year               "???"
-  merchant.cc_code               "???"
-  merchant.cc_updated            "???"
 end
 
 Factory.define :brand do |brand|

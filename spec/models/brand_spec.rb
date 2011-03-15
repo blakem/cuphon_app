@@ -74,4 +74,16 @@ describe Brand do
       brand.has_active_instant?.should be_true      
     end
   end
+  
+  describe "default values" do
+    it "should set instant/featured/active to false" do
+      brand = Brand.create
+      brand.instant.should_not be_nil
+      brand.instant.should     be_false
+      brand.featured.should_not be_nil
+      brand.featured.should     be_false
+      brand.active.should_not be_nil
+      brand.active.should     be_false
+    end
+  end
 end

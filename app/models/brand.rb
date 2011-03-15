@@ -18,6 +18,13 @@ class Brand < ActiveRecord::Base
   require 'outbound_messages'
   
   belongs_to :merchant
+  after_initialize :init
+  
+  def init
+    self.instant  ||= false 
+    self.active ||= false
+    self.featured ||=  false
+  end
   
   def self.get_by_obj_or_string(brand)
     if !brand.respond_to?(:id)

@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(:version => 20110314110640) do
     t.string   "active",      :limit => 0
     t.string   "longitude"
     t.string   "latitude"
-    t.string   "in_app",     :limit => 0, :default => "false"
+    t.string   "in_app",      :limit => 0, :default => "false"
   end
 
   create_table "brands_aliases", :force => true do |t|
@@ -114,11 +114,6 @@ ActiveRecord::Schema.define(:version => 20110314110640) do
     t.string   "keyword"
     t.string   "ip_address"
     t.string   "setup_key"
-    t.string   "cc_number"
-    t.string   "cc_month"
-    t.string   "cc_year"
-    t.string   "cc_code"
-    t.integer  "cc_updated"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
