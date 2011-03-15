@@ -21,6 +21,8 @@ class Brand < ActiveRecord::Base
   require 'outbound_messages'
   
   belongs_to :merchant
+  has_many :subscriptions, :foreign_key => 'brand_id', :primary_key => 'id', :dependent => :destroy
+  
   after_initialize :init
   
   def init

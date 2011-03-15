@@ -101,4 +101,16 @@ describe Brand do
       Brand.canonicalize_title('McDonalds TacoBell muffins').should == 'McDonalds TacoBell Muffins'
     end
   end
+  
+  describe "Data integrity" do
+    it "should destroy its subscriptions on deletion" do
+      subscriber = Factory(:subscriber)
+      brand = Factory(:brand)
+      subscriber.subscribe!(brand)
+      subscription = Subscription.find_by_device_id_and_brand_id(subscriber.device_id, brand.id)
+      subscription.brand_id.should == brand.id
+      brand.destroy
+      Subscription.find_by_id(subscription.id).should be_nil
+    end
+  end
 end
