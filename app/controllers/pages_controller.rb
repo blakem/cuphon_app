@@ -6,7 +6,7 @@ class PagesController < ApplicationController
     begin
       run_sms_request(twiml, params)
     rescue Exception => e
-      twiml.response = "ERROR: " + e.message + "\n\n" + e.backtrace.inspect
+      twiml.response = "ERROR: " + e.message + "\n\nBacktrace:" + e.backtrace.inspect
       twiml.save
     end
     @messages = []
