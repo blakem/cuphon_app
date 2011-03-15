@@ -63,27 +63,22 @@ class Brand < ActiveRecord::Base
     def get_or_create(title)
       brand = self.find_by_title(title)
       return brand if brand
-      brand = Brand.create(:title => Brand.canonicalize_title_for_brand(title))
+      brand = Brand.create(:title => Brand.canonicalize_title(title))
       BrandsInstant.create(:brand_id => brand.id)
-      BrandsAlias.create(:alias => Brand.canonicalize_title(title), :brand_id => brand.id)
+      BrandsAlias.create(:alias => BrandsAlias.canonicalize_alias(title), :brand_id => brand.id)
       brand
     end
   
     def find_by_fuzzy_match(string)
       brand = find_by_title(string)
       unless brand
-        brand_alias = BrandsAlias.find_by_alias(string) || BrandsAlias.find_by_alias(Brand.canonicalize_title(string))
+        brand_alias = BrandsAlias.find_by_alias(string) || BrandsAlias.find_by_alias(BrandsAlias.canonicalize_alias(string))
         brand = brand_alias.brand if brand_alias
       end
       return brand
     end
   
-    def canonicalize_title(string) # XXX belongs in BrandsAlias
-      return '' unless string
-      string.downcase.gsub(/\s+/, '').gsub(/[^[a-z0-9]]+/, '')
-    end
-
-    def canonicalize_title_for_brand(title)
+    def canonicalize_title(title)
       return '' unless title 
       title.split.map { |w| a = w.split(//); a[0] = a[0].upcase; a.join('') }.join(' ')
     end

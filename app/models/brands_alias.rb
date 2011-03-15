@@ -12,4 +12,9 @@
 
 class BrandsAlias < ActiveRecord::Base
   belongs_to :brand
+
+  def self.canonicalize_alias(string)
+    return '' unless string
+    string.downcase.gsub(/\s+/, '').gsub(/[^[a-z0-9]]+/, '')
+  end
 end
