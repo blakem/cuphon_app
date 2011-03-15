@@ -8,6 +8,7 @@ describe PagesController do
     Brand.all.each { |o| o.destroy }
     Subscriber.all.each { |o| o.destroy }
     QueuedMessage.all.each { |o| o.destroy }
+    TwimlSmsRequest.all.each { |o| o.destroy }
   end
   
   describe "POST 'sms.xml'" do
@@ -386,6 +387,10 @@ describe PagesController do
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         QueuedMessage.all.length.should == 1
+        twimls = TwimlSmsRequest.all
+        twimls.count.should == 3
+        twimls.select { |t| t.response =~ /already/ }.count.should == 1
+        twimls.select { |t| t.response =~ /Ignored/ }.count.should == 2
       end
 
       it "should ignore messages from longer than 1 minute ago" do

@@ -4,7 +4,9 @@ class PagesController < ApplicationController
   def sms
     twiml = TwimlSmsRequest.create_from_params(params)
     @messages = build_messages(params)
-    if @messages[0] == 'Profane'
+    if @messages.empty?
+      twiml.response = 'Ignored'
+    elsif @messages[0] == 'Profane'
       @messages = []
       twiml.response = 'Profane - No response sent'
     else
@@ -15,7 +17,7 @@ class PagesController < ApplicationController
       priority = m =~ /Welcome/ ? 2 : 1
       QueuedMessage.create(:device_id => params[:From], :body => m, :priority => priority)
     end
-    @messages = []
+    @messages = []   # Don't send any response back through the reply
   end
 
   private
