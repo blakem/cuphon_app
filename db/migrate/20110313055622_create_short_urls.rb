@@ -2,10 +2,9 @@ class CreateShortUrls < ActiveRecord::Migration
   def self.up
     create_table :short_urls do |t|
       t.string :url
-      t.string :merchant_title
-      t.string :unsubscribe_title
-      t.string :text_1
-      t.string :text_2
+      t.string :brand_title
+      t.string :description
+      t.string :extended
       t.string :image_url
 
       t.timestamps

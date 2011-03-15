@@ -82,10 +82,9 @@ ActiveRecord::Schema.define(:version => 20110314110640) do
 
   create_table "brands_instant", :force => true do |t|
     t.integer  "brand_id"
-    t.string   "title"
     t.string   "description"
     t.text     "extended"
-    t.string   "image_id"
+    t.string   "image_url"
     t.datetime "expires_at"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -146,14 +145,13 @@ ActiveRecord::Schema.define(:version => 20110314110640) do
 
   create_table "short_urls", :force => true do |t|
     t.string   "url"
-    t.string   "merchant_title"
-    t.string   "unsubscribe_title"
-    t.string   "text_1"
-    t.string   "text_2"
+    t.string   "brand_title"
+    t.string   "description"
+    t.string   "extended"
     t.string   "image_url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "opened",            :limit => 0
+    t.string   "opened",      :limit => 0
   end
 
   create_table "short_urls_log", :force => true do |t|

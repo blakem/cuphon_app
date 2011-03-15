@@ -432,7 +432,6 @@ describe PagesController do
         # "Cuphon from Starbucks: Come in for our new holiday lattes, buy one get one 50% off!. More: http://cphn.me/sbux1"
         brand = Factory(:brand)
         brand_instant = BrandsInstant.create(:brand_id => brand.id, 
-                                             :title => 'An instant coupon for you!',
                                              :description => 'Come in for our new holiday lattes, buy one get one 50% off!')
         phone = Factory.next(:phone)
         post 'sms', @valid.merge(:Body => brand.title, :From => phone)
@@ -475,7 +474,7 @@ describe PagesController do
 
       it "should match on an alias with an instant coupon" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
-         brand_instant = BrandsInstant.create(:brand_id => brand.id, :title => 'An instant coupon for you!')
+         brand_instant = BrandsInstant.create(:brand_id => brand.id)
          brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)

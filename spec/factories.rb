@@ -19,7 +19,7 @@ end
 
 Factory.define :brand do |brand|
   brand.sequence(:title) { |n| "YummyYummyFancyGoodFood_#{n+1}" }
-  brand.instant                  true
+  brand.instant                  'true'
 end
 
 Factory.define :subscriber do |s|
@@ -28,5 +28,4 @@ end
 
 Factory.define :brands_instant do |instant|
   instant.association :brand, :factory => :brand
-  instant.title "asdfasfadfs"
 end
