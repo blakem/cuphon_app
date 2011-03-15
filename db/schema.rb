@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(:version => 20110314110640) do
     t.string   "active",      :limit => 0
     t.string   "longitude"
     t.string   "latitude"
-    t.string   "checked",     :limit => 0, :default => "false"
+    t.string   "in_app",     :limit => 0, :default => "false"
   end
 
   create_table "brands_aliases", :force => true do |t|
