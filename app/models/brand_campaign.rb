@@ -15,5 +15,6 @@
 #  updated_at  :datetime
 #
 
-class BrandsCampaign < ActiveRecord::Base
+class BrandCampaign < ActiveRecord::Base
+  def self.table_name() "brands_campaigns" end
 end
