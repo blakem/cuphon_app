@@ -189,4 +189,14 @@ describe Subscriber do
       subscriber.brands.should include(brand3)
     end
   end
+  
+  describe "Data integrity" do
+    it "should not destroy Queued message on deletion" do
+      subscriber = Factory(:subscriber)
+      queued = QueuedMessage.create(:device_id => subscriber.device_id, :body => "Hello", :priority => 2)
+      subscriber.queued_messages.should include(queued)
+      subscriber.destroy
+      QueuedMessage.find_by_id(queued.id).should_not be_nil
+    end
+  end
 end

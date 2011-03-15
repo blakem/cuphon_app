@@ -1,4 +1,4 @@
-class CreateBrandAliases < ActiveRecord::Migration
+class CreateBrandsAliases < ActiveRecord::Migration
   def self.up
     create_table :brands_aliases do |t|
       t.integer :brand_id

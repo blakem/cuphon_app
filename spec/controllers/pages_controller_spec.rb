@@ -501,9 +501,11 @@ describe PagesController do
         response.should have_selector('response>sms', :content => brand1.title)
         response.should have_selector('response>sms', :content => brand2.title)
         response.should have_selector('response>sms', :content => brand3.title)
-        
-        subscriber.active = 'false'
-        subscriber.save
+
+        post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'STOP')
+        tweak_response(response, true)
+        response.should have_selector('response>sms', :content => "suspended")
+
         post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'LiSt')
         tweak_response(response)
         response.should have_selector('response>sms', :content => "You are not subscribed to any brands.")

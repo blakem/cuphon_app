@@ -1,4 +1,4 @@
-class CreateBrandInstants < ActiveRecord::Migration
+class CreateBrandsInstants < ActiveRecord::Migration
   def self.up
     create_table :brands_instant do |t|
       t.integer :brand_id

@@ -12,4 +12,5 @@
 #
 
 class QueuedMessage < ActiveRecord::Base
+  belongs_to :subscriber, :foreign_key => :device_id, :primary_key => :device_id
 end
