@@ -21,7 +21,7 @@ describe ShortUrlGenerator do
   
   it "should have a short url" do
     url = ShortUrlGenerator.short_url
-    url.should =~ /^http:\/\/cphn.me\/[a-z0-9]{5}$/
+    url.should =~ /^cuphon.com\/[a-z0-9]{5}$/
   end
   
   it "should ensure that it doesn't already exist" do
@@ -33,7 +33,7 @@ describe ShortUrlGenerator do
     end
     ShortUrl.create(:url => 'FOOBAR')
     url = ShortUrlGenerator.short_url
-    url.should == 'http://cphn.me/BAZQUX'
+    url.should == 'cuphon.com/BAZQUX'
   end
   
 end

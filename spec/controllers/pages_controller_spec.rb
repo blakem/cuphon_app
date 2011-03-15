@@ -438,10 +438,10 @@ describe PagesController do
         tweak_response(response)
         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
         response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}: #{brand_instant.description} More: ")
-        response.body.should =~ /More: http:\/\/cphn.me\/[a-z0-9]{5}/
+        response.body.should =~ /More: cuphon.com\/[a-z0-9]{5}/
         response.should_not have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
         response.should_not have_selector('response>sms', :content => "been subscribed to")
-        response.body =~ /More: http:\/\/cphn.me\/([a-z0-9]{5})/
+        response.body =~ /More: cuphon.com\/([a-z0-9]{5})/
 
         short_url = ShortUrl.find_by_url($1)
         short_url.should_not be_nil
@@ -461,7 +461,7 @@ describe PagesController do
         post 'sms', @valid.merge(:Body => brand.title, :From => phone)
         tweak_response(response)
         response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}: #{brand_instant.description} More: ")
-        response.body =~ /More: http:\/\/cphn.me\/([a-z0-9]{5})/
+        response.body =~ /More: cuphon.com\/([a-z0-9]{5})/
 
         short_url = ShortUrl.find_by_url($1)
         short_url.brand_title.should == brand.title

@@ -16,11 +16,10 @@ module ShortUrlGenerator
 
     def short_url_and_base
       base = self.random_base
-      url = "http://cphn.me/" + base
       if ShortUrl.find_by_url(base)
          self.short_url_and_base
       else
-        ["http://cphn.me/" + base, base]
+        ["cuphon.com/" + base, base]
       end
     end
   end
