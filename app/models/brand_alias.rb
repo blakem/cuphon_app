@@ -10,9 +10,10 @@
 #  updated_at :datetime
 #
 
-class BrandsAlias < ActiveRecord::Base
+class BrandAlias < ActiveRecord::Base
+  def self.table_name() "brands_aliases" end
   belongs_to :brand
-
+    
   def self.canonicalize_alias(string)
     return '' unless string
     string.downcase.gsub(/\s+/, '').gsub(/[^[a-z0-9]]+/, '')

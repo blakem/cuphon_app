@@ -191,7 +191,7 @@ describe PagesController do
           tweak_response(response)
           response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
           response.should have_selector('response>sms', :content => "been subscribed to #{brand_created}")
-          brand_alias = BrandsAlias.find_by_alias(canonical)
+          brand_alias = BrandAlias.find_by_alias(canonical)
           brand_alias.alias.should == canonical
           brand = Brand.find_by_fuzzy_match(canonical)
           brand.title.should == brand_created
@@ -204,7 +204,7 @@ describe PagesController do
           canonical = 'ilikejellybeans'
           subscriber = Factory(:subscriber)
           brand = Factory(:brand, :title => brand_title)
-          BrandsAlias.create(:brand_id => brand.id, :alias => canonical)
+          BrandAlias.create(:brand_id => brand.id, :alias => canonical)
           post 'sms', @valid.merge(:Body => body, :From => subscriber.device_id )
           tweak_response(response)
           response.should have_selector('response>sms', :content => "been subscribed to #{brand_title}")
@@ -544,7 +544,7 @@ describe PagesController do
       it "should match on an alias with an instant coupon" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop')
          brand_instant = BrandsInstant.create(:brand_id => brand.id)
-         brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
+         brand_alias = BrandAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName')
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join AnotherCoolName   ', :From => phone)
          tweak_response(response)
@@ -556,7 +556,7 @@ describe PagesController do
 
       it "should match on an alias without an instant coupon" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop2')
-         brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName2')
+         brand_alias = BrandAlias.create(:brand_id => brand.id, :alias => 'AnotherCoolName2')
          phone = Factory.next(:phone)
          post 'sms', @valid.merge(:Body => '  join AnotherCOOLName2   ', :From => phone)
          tweak_response(response)
@@ -566,7 +566,7 @@ describe PagesController do
 
       it "should respond with brand.title when already subscribed" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop3')
-         brand_alias = BrandsAlias.create(:brand_id => brand.id, :alias => 'wikiwooworkshop3')
+         brand_alias = BrandAlias.create(:brand_id => brand.id, :alias => 'wikiwooworkshop3')
          subscriber = Factory(:subscriber)
          subscriber.subscribe!(brand)
          post 'sms', @valid.merge(:Body => brand_alias.alias, :From => subscriber.device_id)

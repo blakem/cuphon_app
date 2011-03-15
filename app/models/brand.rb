@@ -65,14 +65,14 @@ class Brand < ActiveRecord::Base
       return brand if brand
       brand = Brand.create(:title => Brand.canonicalize_title(title))
       BrandsInstant.create(:brand_id => brand.id)
-      BrandsAlias.create(:alias => BrandsAlias.canonicalize_alias(title), :brand_id => brand.id)
+      BrandAlias.create(:alias => BrandAlias.canonicalize_alias(title), :brand_id => brand.id)
       brand
     end
   
     def find_by_fuzzy_match(string)
       brand = find_by_title(string)
       unless brand
-        brand_alias = BrandsAlias.find_by_alias(string) || BrandsAlias.find_by_alias(BrandsAlias.canonicalize_alias(string))
+        brand_alias = BrandAlias.find_by_alias(string) || BrandAlias.find_by_alias(BrandAlias.canonicalize_alias(string))
         brand = brand_alias.brand if brand_alias
       end
       return brand
