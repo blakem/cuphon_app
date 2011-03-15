@@ -70,7 +70,15 @@ describe Subscriber do
     
     subscriber.unsubscribe!(brand)
     subscriber.reload
-    subscriber.is_subscribed?(brand).should be_false    
+    subscriber.is_subscribed?(brand).should be_false
+    
+    subscriber.subscribe!(brand)
+    subscriber.reload
+    subscriber.is_subscribed?(brand).should be_true
+    subscriber.active = 'false'
+    subscriber.save
+    subscriber.reload
+    subscriber.is_subscribed?(brand).should be_false
   end
 
   it "should unsubscribe from all brands on unsubscribe_all!" do
@@ -102,6 +110,66 @@ describe Subscriber do
       subscriber.reload
       subscriber.active.should == 'true'
       subscriber.type.should == 'sms'
+    end
+  end
+  
+  describe "lazy deletion" do
+    
+    it "should have a working active? method" do
+      subscriber = Factory(:subscriber)
+      subscriber.active?.should be_true
+      subscriber.reload
+      subscriber.active?.should be_true
+
+      subscriber.active = 'false'
+      subscriber.active?.should be_false
+      subscriber.save
+      subscriber.reload
+      subscriber.active?.should be_false
+
+      subscriber.active = 'true'
+      subscriber.active?.should be_true
+      subscriber.save
+      subscriber.reload
+      subscriber.active?.should be_true
+    end
+    
+    it "should set active to false on unsubscribe_all and true on subscribe" do
+      brand1 = Factory(:brand)
+      brand2 = Factory(:brand)
+      brand3 = Factory(:brand)
+      subscriber = Factory(:subscriber)
+      [brand1, brand2, brand3].each do |brand|
+        subscriber.subscribe!(brand)
+      end
+      subscriber.active?.should be_true
+      subscriber.is_subscribed?(brand1).should be_true
+      subscriber.is_subscribed?(brand2).should be_true
+      subscriber.is_subscribed?(brand3).should be_true
+      
+      subscriber.unsubscribe_all!
+      subscriber.reload
+      subscriber.is_subscribed?(brand1).should be_false
+      subscriber.is_subscribed?(brand2).should be_false
+      subscriber.is_subscribed?(brand3).should be_false
+
+      subscriber.active = "true"
+      subscriber.save
+      subscriber.is_subscribed?(brand1).should be_true
+      subscriber.is_subscribed?(brand2).should be_true
+      subscriber.is_subscribed?(brand3).should be_true
+
+      subscriber.unsubscribe_all!
+      subscriber.reload
+      subscriber.is_subscribed?(brand1).should be_false
+      subscriber.is_subscribed?(brand2).should be_false
+      subscriber.is_subscribed?(brand3).should be_false
+
+      subscriber.subscribe!(brand1)
+      subscriber.reload
+      subscriber.is_subscribed?(brand1).should be_true
+      subscriber.is_subscribed?(brand2).should be_true
+      subscriber.is_subscribed?(brand3).should be_true
     end
   end
 end

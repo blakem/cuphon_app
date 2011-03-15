@@ -72,11 +72,12 @@ describe PagesController do
 
     end
 
-    def tweak_response(response)
+    def tweak_response(response, delete_queued = false)
       messages = ''
       QueuedMessage.all.map { |m| m.body }.each do |m|
         messages += "<Sms>#{m}</Sms>"
       end
+      QueuedMessage.all.each { |q| q.destroy } if delete_queued
       response.body = "<Response>#{messages}<Response>"
     end
 
@@ -286,12 +287,20 @@ describe PagesController do
           subscriber.subscribe!(brand2)
           subscriber.subscribe!(brand3)
           post 'sms', @valid.merge(:Body => "#{cmd}", :From => subscriber.device_id)
-          tweak_response(response)
+          tweak_response(response, true)
           response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")
           subscriber.reload
           subscriber.is_subscribed?(brand1).should be_false      
           subscriber.is_subscribed?(brand2).should be_false      
-          subscriber.is_subscribed?(brand3).should be_false      
+          subscriber.is_subscribed?(brand3).should be_false
+
+          post 'sms', @valid.merge(:Body => "START", :From => subscriber.device_id)
+          tweak_response(response)
+          response.should have_selector('response>sms', :content => "Your subscriptions have been restarted")
+          subscriber.reload
+          subscriber.is_subscribed?(brand1).should be_true      
+          subscriber.is_subscribed?(brand2).should be_true      
+          subscriber.is_subscribed?(brand3).should be_true           
         end
       end
     end

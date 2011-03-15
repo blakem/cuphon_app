@@ -23,6 +23,11 @@ module CuphonEngine
 
     private
       def perform_start_action(subscriber, brand)
+        if brand.nil? or brand == ''
+          subscriber.active = 'true'
+          subscriber.save
+          return OutboundMessages.restart_message
+        end
         return 'Profane' if ProfanityChecker.has_profane_word?(brand)
         if brand_obj = Brand.find_by_fuzzy_match(brand)
           return OutboundMessages.already_subscribed_message(brand_obj.title) if subscriber.is_subscribed?(brand_obj)
@@ -54,7 +59,7 @@ module CuphonEngine
       end
       
       def perform_reset_action(subscriber, brand)
-        subscriber.unsubscribe_all!
+        subscriber.unsubscribe!(*subscriber.brands)
         subscriber.destroy
         OutboundMessages.resetstatus_message
       end

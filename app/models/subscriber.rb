@@ -29,6 +29,8 @@ class Subscriber < ActiveRecord::Base
   end
 
   def subscribe!(*brands)
+    self.active = 'true'
+    self.save
     brands.each do |brand|
       subscribe_to_brand!(brand)
     end
@@ -41,15 +43,19 @@ class Subscriber < ActiveRecord::Base
   end
   
   def unsubscribe_all!
-    self.brands.each do |brand|
-      self.unsubscribe!(brand)
-    end
+    self.active = 'false'
+    self.save
   end
       
   def is_subscribed?(brand)
+    return false unless self.active?
     brand = Brand.get_by_obj_or_string(brand)
     return unless brand
     self.brands.include?(brand)
+  end
+  
+  def active?
+    self.active == "true"  
   end
   
   private
