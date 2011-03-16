@@ -489,11 +489,13 @@ describe PagesController do
         brand = Factory(:brand)
         subscriber = Factory(:subscriber, :device_id => device_id)
         subscriber.subscribe!(brand)
+        LogInstantCuphon.create(:brand_id => brand.id, :device_id => subscriber.device_id)
         post 'sms', @valid.merge(:Body => "RESETSTATUS", :From => subscriber.device_id)
         tweak_response(response)
         response.should have_selector('response>sms', :content => "You are now reset to a new user")
         Subscription.find_by_device_id_and_brand_id(device_id, brand.id).should be_nil
         Subscriber.find_by_device_id(device_id).should be_nil
+        LogInstantCuphon.where(:brand_id => brand.id, :device_id => subscriber.device_id).count.should == 0
       end
     end
 

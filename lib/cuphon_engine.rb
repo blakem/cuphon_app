@@ -63,6 +63,7 @@ module CuphonEngine
       end
       
       def perform_reset_action(subscriber, brand, welcome)
+        LogInstantCuphon.find_all_by_device_id(subscriber.device_id).each { |l| l.destroy }
         subscriber.unsubscribe!(*subscriber.brands)
         subscriber.destroy
         OutboundMessages.resetstatus_message
