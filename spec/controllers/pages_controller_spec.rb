@@ -72,7 +72,7 @@ describe PagesController do
 
     end
 
-    def tweak_response(response, delete_queued = false)
+    def tweak_response(response, delete_queued = true)
       messages = ''
       QueuedMessage.all.map { |m| m.body }.each do |m|
         messages += "<Sms>#{m}</Sms>"
@@ -163,13 +163,13 @@ describe PagesController do
 
         it "should respond to garbled output with help message" do
           post 'sms', @valid.merge(:Body => 'alskdasdfslasdfj')
-          tweak_response(response, true)
+          tweak_response(response)
           response.should have_selector('response>sms', :content => "You've been subscribed to") # How do we tell between garbage and real tags?
         end
         
         it "should respond commands with a welcome message for a new user with a simple start message" do
           post 'sms', @valid.merge(:Body => 'START', :From => Factory.next(:phone) + 'foobarbaz')
-          tweak_response(response)
+          tweak_response(response, false)
           response.should have_selector('response>sms', :content => 'Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help.')
           response.should_not have_selector('response>sms', :content => 'been subscribed to')
           response.should_not have_selector('response>sms', :content => 'Your subscriptions have been restarte')
@@ -303,7 +303,7 @@ describe PagesController do
           subscriber.subscribe!(brand2)
           subscriber.subscribe!(brand3)
           post 'sms', @valid.merge(:Body => "#{cmd}", :From => subscriber.device_id)
-          tweak_response(response, true)
+          tweak_response(response)
           response.should have_selector('response>sms', :content => "Your subscriptions have been suspended")
           subscriber.reload
           subscriber.is_subscribed?(brand1).should be_false      
@@ -505,14 +505,14 @@ describe PagesController do
         subscriber = Factory(:subscriber)
         subscriber.subscribe!(brand1, brand2, brand3)
         post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'LIST')
-        tweak_response(response, true)
+        tweak_response(response)
         response.should have_selector('response>sms', :content => "You are subscribed to:")
         response.should have_selector('response>sms', :content => brand1.title)
         response.should have_selector('response>sms', :content => brand2.title)
         response.should have_selector('response>sms', :content => brand3.title)
 
         post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'STOP')
-        tweak_response(response, true)
+        tweak_response(response)
         response.should have_selector('response>sms', :content => "suspended")
 
         post 'sms', @valid.merge(:From => subscriber.device_id, :Body => 'LiSt')
@@ -530,7 +530,7 @@ describe PagesController do
                                              :description => 'Come in for our new holiday lattes, buy one get one 50% off!')
         phone = Factory.next(:phone)
         post 'sms', @valid.merge(:Body => brand.title, :From => phone)
-        tweak_response(response)
+        tweak_response(response, false)
         response.should have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
         response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}: #{brand_instant.description} More: ")
         response.body.should =~ /More: cuphon.com\/[a-z0-9]{5}/
@@ -585,12 +585,12 @@ describe PagesController do
          brand.has_active_instant?.should be_true
          subscriber = Factory(:subscriber)
          post 'sms', @valid.merge(:Body => brand.title, :From => subscriber.device_id)
-         tweak_response(response, true)
+         tweak_response(response)
          response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}")
          LogInstantCuphon.find(:all, :conditions => { :device_id => subscriber.device_id, :brand_id => brand.id }).count.should == 1
          
          post 'sms', @valid.merge(:Body => "stop #{brand.title}", :From => subscriber.device_id)
-         tweak_response(response, true)
+         tweak_response(response)
          response.should have_selector('response>sms', :content => "Your subscription to #{brand.title} has been suspended.")        
          
          post 'sms', @valid.merge(:Body => "start #{brand.title}", :From => subscriber.device_id)
@@ -640,7 +640,7 @@ describe PagesController do
          subscriber = Factory(:subscriber)
          subscriber.subscribe!(brand)
          post 'sms', @valid.merge(:Body => brand_alias.alias, :From => subscriber.device_id)
-         tweak_response(response, true)
+         tweak_response(response)
          response.should_not have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
          response.should have_selector('response>sms', :content => "You are already subscribed to #{brand.title}")        
 
