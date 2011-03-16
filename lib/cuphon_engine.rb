@@ -33,6 +33,9 @@ module CuphonEngine
           return OutboundMessages.already_subscribed_message(brand_obj.title) if subscriber.is_subscribed?(brand_obj)
           subscriber.subscribe!(brand_obj)
           if brand_obj.has_active_instant?
+            loginstant = LogInstantCuphon.where(:device_id => subscriber.device_id, :brand_id => brand_obj.id)
+            return OutboundMessages.subscribed_message(brand_obj.title) if loginstant.any?
+            LogInstantCuphon.create(:device_id => subscriber.device_id, :brand_id => brand_obj.id)
             brand_obj.send_active_message
           else
             OutboundMessages.subscribed_message(brand_obj.title)

@@ -33,12 +33,7 @@ class Brand < ActiveRecord::Base
     self.featured ||= 'false'
     self.in_app   ||= 'false'
   end
-  
-  # def brands_instants
-  #   # has_many :brands_instants
-  #   BrandInstant.where(:brand_id => self.id)
-  # end
-  
+    
   def send_active_message
     instant = self.brand_instants.first # xxx sort by updated_at time
     (short_url, base) = ShortUrlGenerator.short_url_and_base

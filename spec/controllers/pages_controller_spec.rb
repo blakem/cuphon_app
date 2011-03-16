@@ -578,6 +578,28 @@ describe PagesController do
          response.should_not have_selector('response>sms', :content => "been subscribed to")
       end
 
+      it "should not send an instant twice if you resubscribe" do
+         brand = Factory(:brand)
+         brand_instant = BrandInstant.create(:brand_id => brand.id)
+         brand.reload
+         brand.has_active_instant?.should be_true
+         subscriber = Factory(:subscriber)
+         post 'sms', @valid.merge(:Body => brand.title, :From => subscriber.device_id)
+         tweak_response(response, true)
+         response.should have_selector('response>sms', :content => "Cuphon from #{brand.title}")
+         LogInstantCuphon.find(:all, :conditions => { :device_id => subscriber.device_id, :brand_id => brand.id }).count.should == 1
+         
+         post 'sms', @valid.merge(:Body => "stop #{brand.title}", :From => subscriber.device_id)
+         tweak_response(response, true)
+         response.should have_selector('response>sms', :content => "Your subscription to #{brand.title} has been suspended.")        
+         
+         post 'sms', @valid.merge(:Body => "start #{brand.title}", :From => subscriber.device_id)
+         tweak_response(response)
+         response.should_not have_selector('response>sms', :content => "Cuphon from #{brand.title}")
+         response.should have_selector('response>sms', :content => "been subscribed to #{brand.title}")
+         LogInstantCuphon.find(:all, :conditions => { :device_id => subscriber.device_id, :brand_id => brand.id }).count.should == 1
+      end
+
       it "should not match if instant is disabled on the brand" do
          brand = Factory(:brand, :title => 'MyInstantsAreOff', :instant => false)
          brand_instant = BrandInstant.create(:brand_id => brand.id)
