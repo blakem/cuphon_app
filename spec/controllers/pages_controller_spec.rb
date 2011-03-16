@@ -612,15 +612,20 @@ describe PagesController do
          response.should have_selector('response>sms', :content => "been subscribed to #{brand.title}")        
       end
 
-      it "should respond with brand.title when already subscribed" do
+      it "should respond with brand.title when already subscribed and on unsubscribe" do
          brand = Factory(:brand, :title => 'WikiWooWorkshop3')
          brand_alias = BrandAlias.create(:brand_id => brand.id, :alias => 'wikiwooworkshop3')
          subscriber = Factory(:subscriber)
          subscriber.subscribe!(brand)
          post 'sms', @valid.merge(:Body => brand_alias.alias, :From => subscriber.device_id)
-         tweak_response(response)
+         tweak_response(response, true)
          response.should_not have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
          response.should have_selector('response>sms', :content => "You are already subscribed to #{brand.title}")        
+
+         post 'sms', @valid.merge(:Body => "NO #{brand_alias.alias}", :From => subscriber.device_id)
+         tweak_response(response)
+         response.should_not have_selector('response>sms', :content => "Welcome to Cuphon! Reply with STOP to stop.")
+         response.should have_selector('response>sms', :content => "Your subscription to #{brand.title} has been suspended.")        
       end
     end
 

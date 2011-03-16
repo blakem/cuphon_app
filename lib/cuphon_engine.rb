@@ -50,8 +50,9 @@ module CuphonEngine
           OutboundMessages.unsubscribe_all_message
         else
           if subscriber.is_subscribed?(brand)
-            subscriber.unsubscribe!(brand)
-            OutboundMessages.unsubscribe_message(brand)
+            brand_obj = Brand.find_by_fuzzy_match(brand)
+            subscriber.unsubscribe!(brand_obj)
+            OutboundMessages.unsubscribe_message(brand_obj.title)
           else
             OutboundMessages.not_currently_subscribed_message(brand)
           end
