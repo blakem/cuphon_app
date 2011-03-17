@@ -21,4 +21,12 @@ class ApiDiscover < ActiveRecord::Base
     self.instant  ||= 'false' 
     self.featured ||=  'false'
   end
+  
+  def featured?
+    self.featured == 'true'
+  end
+
+  def instant?
+    self.instant == 'true'
+  end
 end

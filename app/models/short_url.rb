@@ -20,4 +20,8 @@ class ShortUrl < ActiveRecord::Base
   def init
     self.opened  ||= 'false' 
   end
+  
+  def opened?
+    self.opened == 'true'
+  end
 end

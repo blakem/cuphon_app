@@ -18,4 +18,8 @@ class PasswordReset < ActiveRecord::Base
   def init
     self.used ||= 'false' 
   end
+  
+  def used?
+    self.used == 'true'
+  end
 end
