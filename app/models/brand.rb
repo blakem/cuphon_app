@@ -48,6 +48,15 @@ class Brand < ActiveRecord::Base
   def instant?
     self.instant == "true"  
   end
+  def active?
+    self.active == "true"  
+  end
+  def featured?
+    self.featured == "true"  
+  end
+  def in_app?
+    self.in_app == "true"  
+  end
   
   def has_active_instant?
     return false unless self.instant?
@@ -66,7 +75,7 @@ class Brand < ActiveRecord::Base
     def get_or_create(title)
       brand = self.find_by_title(title)
       return brand if brand
-      brand = Brand.create(:title => Brand.canonicalize_title(title))
+      brand = Brand.create(:title => Brand.canonicalize_title(title), :in_app => 'false', :active => 'true')
       BrandInstant.create(:brand_id => brand.id)
       BrandAlias.create(:alias => BrandAlias.canonicalize_alias(title), :brand_id => brand.id)
       brand

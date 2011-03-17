@@ -6,7 +6,8 @@ describe Brand do
       :title => 'YummyPork',
       :featured => 'true',
       :instant => 'false',
-      :active => 'true'
+      :active => 'true',
+      :in_app => 'false'
     }
   end
   
@@ -19,6 +20,7 @@ describe Brand do
       brand.featured.should == 'true'
       brand.instant.should  == 'false'
       brand.active.should   == 'true'
+      brand.in_app.should == 'false'
     end
     
     it "should be findable" do
@@ -28,6 +30,24 @@ describe Brand do
       Brand.where(:instant => 'false').should_not be_nil
       Brand.where(:active => 'true').should_not be_nil      
     end
+  end
+  
+  describe "get_or_create" do
+    it "should get a brand that already exists" do
+      brand1 = Factory(:brand)
+      brand2 = Brand.get_or_create(brand1.title)
+      brand2.should == brand1
+    end
+
+    it "should create one if it doesn't already exist" do
+      brand1 = Brand.get_or_create('get_or_create_test')
+      brand2 = Brand.find_by_title('get_or_create_test')
+      brand1.should == brand2
+      brand1.in_app?.should be_false
+      brand1.active?.should be_true
+      brand1.featured?.should be_false
+      brand1.instant?.should be_false
+    end    
   end
 
   describe "factory methods" do
