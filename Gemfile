@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.5'
 gem 'sqlite3'
 gem 'mysql2'
+gem 'devise'
 
 group :test, :localtest, :development do
   gem 'rspec-rails'
