@@ -63,12 +63,10 @@ class Subscriber < ActiveRecord::Base
 
     def subscribe_to_brand!(brand)
       return unless brand
-    
-      if !brand.respond_to?(:id)
+      if brand.class == String # XXX find better way to do this....
         brand_str = brand
         brand = Brand.get_or_create(brand)
       end
-
       Subscription.create(:device_id => self.device_id, :brand_id => brand.id, :brand_title => brand.title)
     end
 
