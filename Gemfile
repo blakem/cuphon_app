@@ -2,16 +2,11 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.5'
 gem 'sqlite3'
-#gem 'trails'
-#gem 'twiliolib'
 gem 'mysql2'
 
-group :development do
+group :test, :localtest, :development do
   gem 'rspec-rails'
   gem 'annotate-models'
-end
-
-group :test, :localtest do
   gem 'rspec'
   gem 'spork', '0.8.4'
   gem 'webrat'

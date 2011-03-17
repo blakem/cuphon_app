@@ -1,29 +1,27 @@
-login: &login
+production:
   username: root
   adapter: mysql2
   port: 1083
   host: db.cuphon.dotcloud.com
   password: ;[sGueRsr1_Fvc_a[vB/
+  database: cuphon
+
+locallogin: &locallogin
+  adapter: mysql2
+  username: root
 
 development:
-  <<: *login
+  <<: *locallogin
   database: cuphon_development
 
 test:
-  <<: *login
+  <<: *locallogin
   database: cuphon_test
 
-production:
-  <<: *login
-  database: cuphon
-
 localtest:
-  adapter: mysql2
-  username: root
+  <<: *locallogin
   database: cuphon_localtest
   
-
-
 # # SQLite version 3.x
 # #   gem install sqlite3
 # development:
