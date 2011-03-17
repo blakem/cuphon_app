@@ -11,6 +11,9 @@ class PagesController < ApplicationController
     end
     @messages = []
   end
+  
+  def home
+  end
 
   private
   
