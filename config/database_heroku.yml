@@ -1,0 +1,8 @@
+--- 
+production: 
+  username: root
+  adapter: mysql2
+  port: 1083
+  host: db.cuphon.dotcloud.com
+  password: ;[sGueRsr1_Fvc_a[vB/
+  database: cuphon
