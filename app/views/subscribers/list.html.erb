@@ -1,0 +1,14 @@
+<%= will_paginate @subscribers %>
+
+<ul class="subscriber">
+  <table class="subscriber" summary="Subscribers">
+    <tr>
+	<th>DeviceID</th>
+	<th>Type</th>
+	<th>Active</th>
+	<th>Brands</th>
+    <%= render @subscribers %>
+  </table>
+</ul>
+
+<%= will_paginate @subscribers %>

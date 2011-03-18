@@ -7,6 +7,7 @@ CuphonApp::Application.routes.draw do
   match '/brands', :to => 'brands#list'
   match '/merchants', :to => 'merchants#list'
   match '/twiml_sms_requests', :to => 'twiml_sms_requests#list'
+  match '/subscribers', :to => 'subscribers#list'
    
   # The priority is based upon order of creation:
   # first created -> highest priority.
