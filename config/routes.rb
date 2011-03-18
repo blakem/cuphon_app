@@ -4,7 +4,7 @@ CuphonApp::Application.routes.draw do
 
   root :to => 'pages#home'
   match '/twilio', :to => 'twilio#sms'
-  match '/brands_view', :to => 'pages#brands_view'
+  match '/brands', :to => 'brands#list'
    
   # The priority is based upon order of creation:
   # first created -> highest priority.
