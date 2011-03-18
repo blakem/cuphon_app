@@ -2,6 +2,9 @@ class PagesController < ApplicationController
   before_filter :authenticate_user!, :only => :home
 
   def home
-    @title = 'Cuphon Controlpanel'
+  end
+  def brands_view
+    @title = 'Brands'
+    @brands = Brand.all # paginate(:page => params[:page])
   end
 end

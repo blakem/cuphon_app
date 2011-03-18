@@ -1,0 +1,11 @@
+<tr>
+  <td class="brand">
+	<%= brand.title %>
+  </td>
+  <td>
+    <%= brand.merchant ? brand.merchant.name : "None" %>
+  </td>
+  <td>
+	  <%= time_ago_in_words(brand.created_at) %> ago.
+  </td>
+</tr>
