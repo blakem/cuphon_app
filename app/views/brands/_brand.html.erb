@@ -1,6 +1,6 @@
 <tr>
   <td class="brand">
-	<%= brand.title %>
+	<b><%= brand.title %></b>
   </td>
   <td>
     <%= brand.merchant ? brand.merchant.name : "None" %>
@@ -9,7 +9,7 @@
 	<%=raw brand.brand_aliases.map { |a| a.alias }.join('<br/>') %>
   </td>
   <td>
-	<%= time_ago_in_words(brand.created_at) %> ago.
+	<%= time_ago_in_words(brand.created_at).gsub(/^about\s+/, '') %> ago
   </td>
   <td>
 	<%= brand.subscriptions.count %>
