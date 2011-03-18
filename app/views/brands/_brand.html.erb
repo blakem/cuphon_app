@@ -6,6 +6,9 @@
     <%= brand.merchant ? brand.merchant.name : "None" %>
   </td>
   <td>
+	<%= brand.brand_aliases.map { |a| a.alias }.join('<br/>') %>
+  </td>
+  <td>
 	<%= time_ago_in_words(brand.created_at) %> ago.
   </td>
   <td>
