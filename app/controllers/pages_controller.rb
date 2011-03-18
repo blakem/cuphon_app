@@ -5,6 +5,6 @@ class PagesController < ApplicationController
   end
   def brands_view
     @title = 'Brands'
-    @brands = Brand.find(:all, :order => "id desc").paginate(:page => params[:page])
+    @brands = Brand.find(:all, :order => "id desc").paginate(:page => params[:page], :per_page => 100)
   end
 end
