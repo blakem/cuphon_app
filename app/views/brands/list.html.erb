@@ -6,7 +6,7 @@
 	<th><%= link_to "Brand", brands_path(@sort_args[:brand]) %></th>
 	<th>Merchant</th>
 	<th>Aliases</th>
-	<th>Created At</th>
+	<th><%= link_to "Created At", brands_path(@sort_args[:created_at]) %></th>
 	<th>Subscribers</th>
 	<th>Flags</th>
     <%= render @brands %>
