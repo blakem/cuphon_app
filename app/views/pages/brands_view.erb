@@ -1,5 +1,7 @@
 <h1>All Brands</h1>
 
+<%= will_paginate @brands %>
+
 <ul class="brands">
   <table class="brands" summary="Brands">
     <tr>
@@ -11,3 +13,5 @@
     <%= render @brands %>
   </table>
 </ul>
+
+<%= will_paginate @brands %>
