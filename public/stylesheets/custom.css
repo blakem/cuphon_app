@@ -8,6 +8,14 @@ ul.hmenu li {
   display: inline;  
 }
 
+ul.home {
+	margin-top: 1em;
+}
+
+ul.home li {
+	list-style: none;
+}
+
 
 
 /* From Sample App */

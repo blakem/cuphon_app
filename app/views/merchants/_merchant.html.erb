@@ -1,0 +1,20 @@
+<tr>
+  <td class="merchant">
+	<%= merchant.name %>
+  </td>
+  <td class="merchant">
+	<%= merchant.email %>
+  </td>
+  <td class="merchant">
+	<%= merchant.company_name %>
+  </td>
+  <td class="merchant">
+	<%= merchant.keyword %>
+  </td>
+  <td class="merchant">
+	<%=raw merchant.brands.map { |b| b.title }.join('<br/>')%>
+  </td>
+  <td class="merchant">
+	<%= time_ago_in_words(merchant.created_at).gsub(/^about\s+/, '') %> ago
+  </td>
+</tr>

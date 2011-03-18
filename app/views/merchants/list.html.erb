@@ -1,0 +1,16 @@
+<%= will_paginate @merchants %>
+
+<ul class="merchants">
+  <table class="merchants" summary="Merchants">
+    <tr>
+	<th>Name</th>
+	<th>Email</th>
+	<th>CompanyName</th>
+	<th>Keyword</th>
+	<th>Brands</th>
+	<th>Created</th>
+    <%= render @merchants %>
+  </table>
+</ul>
+
+<%= will_paginate @merchants %>
