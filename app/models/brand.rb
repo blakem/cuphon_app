@@ -63,6 +63,14 @@ class Brand < ActiveRecord::Base
     self.brand_instants.any?
   end
 
+  def flags
+    flags = []
+    flags << 'active' if self.active?
+    flags << 'featured' if self.featured?
+    flags << 'in_app' if self.in_app?
+    flags.join(', ')
+  end
+
   class << self
     def get_by_obj_or_string(brand)
       if !brand.respond_to?(:id)

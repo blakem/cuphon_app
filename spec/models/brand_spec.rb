@@ -162,4 +162,20 @@ describe Brand do
     end
 
   end
+  
+  describe "flags" do
+    brand = Factory(:brand)
+    brand.featured = 'true'
+    brand.in_app = 'true'
+    brand.active = 'true'
+    brand.flags.should == 'active, featured, in_app'
+    
+    brand.in_app = 'false'
+    brand.flags.should == 'active, featured'
+
+    brand.featured = 'false'
+    brand.in_app = 'true'
+    brand.active = 'false'
+    brand.flags.should == 'in_app'
+  end
 end
