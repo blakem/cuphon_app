@@ -4,12 +4,10 @@ class BrandsController < ApplicationController
   def list
     sort_args = get_sort_args(params[:sort])
     @title = 'Brands'
-
-#    Book.find(:all, :select => "author_id, count(id) as book_count", :group => "author_id", :order => "book_count")
     @brands = Brand.find(:all, sort_args).paginate(:page => params[:page], :per_page => 100)
     @sort_args={:brand => {:sort => params[:sort] == 'brand_asc' ? 'brand_desc' : 'brand_asc'},
                 :created_at => {:sort => params[:sort] == 'created_at_asc' ? 'created_at_desc' : 'created_at_asc'},
-                :subscriber => {:sort => params[:sort] == 'subscriber_asc' ? 'subscriber_desc' : 'subscriber_asc'}}
+                :subscriber => {:sort => params[:sort] == 'subscriber_desc' ? 'subscriber_asc' : 'subscriber_desc'}}
   end
 
   private
