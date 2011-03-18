@@ -16,7 +16,7 @@ describe SubscribersController do
     it "should be successful when logged in" do
       get 'list'
       response.should be_success
-      response.should have_selector('title', :content => 'Cuphon Controlpanel | SmsRequests')
+      response.should have_selector('title', :content => 'Cuphon Controlpanel | Subscribers')
     end   
   end
 end
