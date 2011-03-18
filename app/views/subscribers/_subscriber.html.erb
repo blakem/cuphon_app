@@ -6,7 +6,7 @@
 	<%= subscriber.type %>
   </td>
   <td class="subscriber">
-	<%= subscriber.active? : 'Yes' : 'No' %>
+	<%= subscriber.active? ? 'Yes' : 'No' %>
   </td>
   <td class="subscriber">
 	<%=raw subscriber.brands.map { |b| b.title }.join('<br/>')%>
