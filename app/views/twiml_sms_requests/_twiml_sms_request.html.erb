@@ -8,4 +8,7 @@
   <td class="twiml_sms_request">
 	<%= twiml_sms_request.response %>
   </td>
+  <td class="twiml_sms_request">
+	<%= time_ago_in_words(twiml_sms_request.created_at).gsub(/^about\s+/, '') %> ago
+  </td>
 </tr>
