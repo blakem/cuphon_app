@@ -1,0 +1,13 @@
+<%= will_paginate @twiml_sms_requests %>
+
+<ul class="twiml_sms_request">
+  <table class="twiml_sms_requests" summary="SmsRequests">
+    <tr>
+	<th>Body</th>
+	<th>From</th>
+	<th>Response</th>
+    <%= render @twiml_sms_requests %>
+  </table>
+</ul>
+
+<%= will_paginate @twiml_sms_requests %>
