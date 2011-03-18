@@ -36,6 +36,14 @@ Spork.prefork do
     # Emulate initializer set_clear_dependencies_hook in 
     # railties/lib/rails/application/bootstrap.rb
     ActiveSupport::Dependencies.clear
+    
+    config.include Devise::TestHelpers, :type => :controller
+    def login_user
+      before(:each) do
+        @request.env["devise.mapping"] = Devise.mappings[:user]
+        sign_in Factory.create(:user)
+      end
+    end
   end
 end
 

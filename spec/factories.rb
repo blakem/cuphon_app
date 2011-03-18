@@ -33,3 +33,9 @@ end
 Factory.define :brand_alias do |brand_alias|
   brand_alias.association :brand, :factory => :brand
 end
+
+Factory.define :user do |user|
+  user.sequence(:email)  { Factory.next(:email) }
+  user.password          "foobar"
+  user.invite_code       User.secret_invite_code
+end
