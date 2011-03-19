@@ -28,6 +28,8 @@ GEM
       activemodel (= 3.0.5)
       activesupport (= 3.0.5)
     activesupport (3.0.5)
+    admin_data (1.1.11)
+      will_paginate (>= 3.0.pre2)
     annotate-models (1.0.4)
     arel (2.0.9)
     bcrypt-ruby (2.1.4)
@@ -96,12 +98,13 @@ GEM
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
       rack-test (>= 0.5.3)
-    will_paginate (3.0.pre)
+    will_paginate (3.0.pre2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  admin_data (= 1.1.11)
   annotate-models
   devise
   factory_girl_rails
@@ -112,4 +115,4 @@ DEPENDENCIES
   spork (= 0.8.4)
   sqlite3
   webrat
-  will_paginate (= 3.0.pre)
+  will_paginate (= 3.0.pre2)

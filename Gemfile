@@ -4,7 +4,8 @@ gem 'rails', '3.0.5'
 gem 'sqlite3'
 gem 'mysql2'
 gem 'devise'
-gem 'will_paginate', '3.0.pre'
+gem 'will_paginate', '3.0.pre2'
+gem 'admin_data', '1.1.11'
 
 group :test, :localtest, :development do
   gem 'rspec-rails'
