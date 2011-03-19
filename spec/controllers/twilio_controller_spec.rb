@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 require 'spec_helper'
 
 describe TwilioController do
@@ -27,6 +29,7 @@ describe TwilioController do
           post 'sms', @valid
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1)
+        TwimlSmsRequest.last.response.should_not =~ /error/i
       end
     
       it "should not crash with an empty body" do
@@ -36,6 +39,7 @@ describe TwilioController do
           post 'sms', invalid_args
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1) 
+        TwimlSmsRequest.last.response.should_not =~ /error/i
       end
       
       it "should not crash with a missing body" do
@@ -45,6 +49,7 @@ describe TwilioController do
           post 'sms', invalid_args
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1) 
+        TwimlSmsRequest.last.response.should_not =~ /error/i
       end
       
       it "should not crash with body of only whitespace" do
@@ -54,6 +59,16 @@ describe TwilioController do
           post 'sms', invalid_args
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1) 
+        TwimlSmsRequest.last.response.should_not =~ /error/i
+      end
+
+      it "should handle utf8 characters" do
+        lambda do
+          post 'sms', @valid.merge(:Body => "ėččę91")
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+        TwimlSmsRequest.last.response.should =~ /You've been subscribed to ėččę91!/
+        TwimlSmsRequest.last.response.should_not =~ /error/i
       end
 
       it "should log a TwimlSmsRequest even with other random stuff submitted" do
@@ -61,6 +76,7 @@ describe TwilioController do
           post 'sms', @valid.merge(:Garbage => 'Foo')
           response.should be_success
         end.should change(TwimlSmsRequest, :count).by(1) 
+        TwimlSmsRequest.last.response.should_not =~ /error/i
       end
 
       it "should store the response in the TwimlSmsRequest" do
@@ -68,8 +84,8 @@ describe TwilioController do
         post 'sms', @valid.merge(:From => from, :Body => 'STOP ALL')
         response.should be_success
         TwimlSmsRequest.find_by_From(from).response.should =~ /Your subscriptions have been suspended/
+        TwimlSmsRequest.last.response.should_not =~ /error/i
       end
-
     end
 
     def tweak_response(response, delete_queued = true)
