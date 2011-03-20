@@ -16,6 +16,7 @@ module ProfanityChecker
     
     def has_profane_word?(string)
       return false if string.nil?
+      return true if BadWord.find_by_word(string)
       string.split.each do |word|
         return true if is_profane?(word)
       end

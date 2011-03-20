@@ -509,6 +509,16 @@ describe TwilioController do
          response.should_not have_selector('response>sms', :content => "been subscribed to #{msg}")
          QueuedMessage.all.count.should == 0
        end
+
+       it "should ignore phrases in the bad_words table" do
+         msg = ' Dog  Cat  Pig '
+         subscriber = Factory(:subscriber)
+         bad_word = BadWord.create(:word => 'dog cat pig')
+         post 'sms', @valid.merge(:Body => msg, :From => subscriber.device_id)
+         tweak_response(response, false)
+         response.should_not have_selector('response>sms', :content => "been subscribed to Dog Cat Pig")
+         QueuedMessage.all.count.should == 0
+       end
     end
 
     describe "RESETSTATUS message will erase a user from the db" do

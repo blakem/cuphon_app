@@ -49,6 +49,14 @@ describe ProfanityChecker do
     it "shouldn't crash on nil" do
       ProfanityChecker.has_profane_word?(nil).should == false      
     end
+    
+    it "should checck to bad_words table for the whole phrase" do
+      ProfanityChecker.has_profane_word?('elephant dog').should be_false
+      ProfanityChecker.has_profane_word?('Elephant dog').should be_false
 
+      BadWord.create(:word => 'elephant dog')
+      ProfanityChecker.has_profane_word?('elephant dog').should be_true
+      ProfanityChecker.has_profane_word?('Elephant dog').should be_true
+    end
   end
 end
