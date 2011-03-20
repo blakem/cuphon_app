@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110320000458) do
+ActiveRecord::Schema.define(:version => 20110320012629) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(:version => 20110320000458) do
     t.string   "longitude"
     t.string   "latitude"
     t.string   "in_app",      :limit => 0, :default => "false"
+    t.string   "national",    :limit => 0,                      :null => false
   end
 
   add_index "brands", ["merchant_id"], :name => "FK_brands_merchant_id_merchant_id"

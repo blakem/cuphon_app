@@ -43,10 +43,11 @@ describe Brand do
       brand1 = Brand.get_or_create('get_or_create_test')
       brand2 = Brand.find_by_title('get_or_create_test')
       brand1.should == brand2
-      brand1.in_app?.should be_false
-      brand1.active?.should be_true
+      brand1.in_app?.should be_true
+      brand1.active?.should be_false
       brand1.featured?.should be_false
       brand1.instant?.should be_false
+      brand1.national?.should be_false
     end    
   end
 

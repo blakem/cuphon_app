@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110314110640
+# Schema version: 20110320012629
 #
 # Table name: brands
 #
@@ -14,6 +14,7 @@
 #  longitude   :string(255)
 #  latitude    :string(255)
 #  in_app      :string(0)       default("false")
+#  national    :string(0)       not null
 #
 
 class Brand < ActiveRecord::Base
@@ -32,6 +33,7 @@ class Brand < ActiveRecord::Base
     self.active   ||= 'false'
     self.featured ||= 'false'
     self.in_app   ||= 'false'
+    self.national ||= 'false'
   end
     
   def send_active_message
@@ -56,6 +58,9 @@ class Brand < ActiveRecord::Base
   end
   def in_app?
     self.in_app == "true"  
+  end
+  def national?
+    self.national == "true"  
   end
   
   def has_active_instant?
@@ -83,7 +88,7 @@ class Brand < ActiveRecord::Base
     def get_or_create(title)
       brand = self.find_by_title(title)
       return brand if brand
-      brand = Brand.create(:title => Brand.canonicalize_title(title), :in_app => 'false', :active => 'true')
+      brand = Brand.create(:title => Brand.canonicalize_title(title), :in_app => 'true')
       BrandInstant.create(:brand_id => brand.id)
       BrandAlias.create(:alias => BrandAlias.canonicalize_alias(title), :brand_id => brand.id)
       brand

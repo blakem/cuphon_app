@@ -211,8 +211,11 @@ describe TwilioController do
           end.should change(Subscriber, :count).by(1)
           brand = Brand.find_by_title(body)
           brand.title.should == body
-          brand.active?.should be_true
-          brand.in_app?.should be_false
+          brand.featured?.should be_false
+          brand.instant?.should be_false
+          brand.national?.should be_false
+          brand.active?.should be_false
+          brand.in_app?.should be_true
           subscriber = Subscriber.find_by_device_id(phone)
           subscriber.is_subscribed?(brand).should be_true
         end
