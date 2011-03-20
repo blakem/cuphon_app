@@ -5,10 +5,12 @@ module ProfanityChecker
     
     def is_profane?(word)
       return false if word.nil?
-      return true if profane_word_hash[word.strip.downcase]
       profane_regexps.each do |regexp| 
         return true if word =~ regexp
       end
+      word = word.strip.downcase
+      return true if profane_word_hash[word]
+      return true if BadWord.find_by_word(word)
       return false
     end
     

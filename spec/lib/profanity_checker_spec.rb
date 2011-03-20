@@ -25,6 +25,15 @@ describe ProfanityChecker do
     it "should tag 'sex' as profane" do
       ProfanityChecker.is_profane?('sex').should == true      
     end
+
+    it "should check the bad_words table for words to skip" do
+      ProfanityChecker.is_profane?('Elephant').should be_false
+      ProfanityChecker.is_profane?('elephant').should be_false
+
+      BadWord.create(:word => 'elephant')
+      ProfanityChecker.is_profane?('elephant').should be_true
+      ProfanityChecker.is_profane?('Elephant').should be_true
+    end
   end
 
   describe "has_profane_word?" do
