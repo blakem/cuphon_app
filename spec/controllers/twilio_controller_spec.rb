@@ -71,6 +71,15 @@ describe TwilioController do
         TwimlSmsRequest.last.response.should_not =~ /error/i
       end
 
+      it "should handle chinese characters" do
+        lambda do
+          post 'sms', @valid.merge(:Body => "倉頡; 仓颉")
+          response.should be_success
+        end.should change(TwimlSmsRequest, :count).by(1) 
+        TwimlSmsRequest.last.response.should =~ /You've been subscribed to 倉頡; 仓颉!/
+        TwimlSmsRequest.last.response.should_not =~ /error/i
+      end
+
       it "should log a TwimlSmsRequest even with other random stuff submitted" do
         lambda do
           post 'sms', @valid.merge(:Garbage => 'Foo')
