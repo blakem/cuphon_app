@@ -702,5 +702,17 @@ describe TwilioController do
          response.should have_selector('response>sms', :content => "Your subscription to #{brand.title} has been suspended.")        
       end
     end
+    
+    describe "Long Brands" do
+      it "should ignore brands that are 25 characters long or longer" do
+        msg = 'x' * 25
+        phone = Factory.next(:phone)
+        post 'sms', @valid.merge(:Body => msg, :From => phone)
+        tweak_response(response, false)
+        response.should_not have_selector('response>sms', :content => "been subscribed to")
+        response.should have_selector('response>sms', :content => "Please make sure merchant names are less that 20 characters")
+        QueuedMessage.all.count.should == 1
+      end
+    end    
   end  
 end

@@ -29,6 +29,7 @@ module CuphonEngine
           return welcome ? false : OutboundMessages.restart_message
         end
         return 'Profane' if ProfanityChecker.has_profane_word?(brand)
+        return OutboundMessages.brand_too_long_message if brand.length >= 25
         if brand_obj = Brand.find_by_fuzzy_match(brand)
           return OutboundMessages.already_subscribed_message(brand_obj.title) if subscriber.is_subscribed?(brand_obj)
           subscriber.subscribe!(brand_obj)

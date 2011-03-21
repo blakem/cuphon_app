@@ -33,9 +33,11 @@ class TwilioController < ApplicationController
     def build_messages(params)
        return [] if is_duplicate?(params)
        welcome = welcome_message(params)
-       [ welcome,
+       messages = [ welcome,
          process_request(params, welcome) 
        ].select {|n| n}
+       messages.shift if messages[1] =~ /^Welcome/
+       messages
     end
 
     def welcome_message(params)

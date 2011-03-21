@@ -3,6 +3,9 @@ module OutboundMessages
     def welcome_message
       "Welcome to Cuphon! Reply with STOP to stop. Reply HELP for help. Msg & data rates may apply. Max 3 msgs/week per brand. Visit Cuphon.com to learn more!"
     end
+    def brand_too_long_message
+      "Welcome to Cuphon.com. Please make sure merchant names are less that 20 characters. Msg&data rates may apply. Reply with STOP to stop, HELP for help."
+    end
     def subscribed_message(brand)
       "You've been subscribed to #{brand}! Soon you'll get offers and deals directly from this brand, spread the word and keep discovering!"
     end

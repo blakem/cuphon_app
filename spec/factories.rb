@@ -18,7 +18,7 @@ Factory.define :merchant do |merchant|
 end
 
 Factory.define :brand do |brand|
-  brand.sequence(:title) { |n| "YummyYummyFancyGoodFood_#{n+1}" }
+  brand.sequence(:title) { |n| "YummyGoodFood_#{n+1}" }
   brand.instant                  'true'
 end
 
