@@ -710,8 +710,11 @@ describe TwilioController do
         post 'sms', @valid.merge(:Body => msg, :From => phone)
         tweak_response(response, false)
         response.should_not have_selector('response>sms', :content => "been subscribed to")
-        response.should have_selector('response>sms', :content => "Please make sure merchant names are less that 20 characters")
+        response.should have_selector('response>sms', :content => "Please make sure merchant names are less than 20 characters")
         QueuedMessage.all.count.should == 1
+        q = QueuedMessage.last
+        q.sent.should == nil
+        q.sent_at.should == nil
       end
     end    
   end  

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110320012629) do
+ActiveRecord::Schema.define(:version => 20110321221954) do
 
   create_table "api_calls", :force => true do |t|
     t.string   "device_id"
@@ -154,6 +154,8 @@ ActiveRecord::Schema.define(:version => 20110320012629) do
     t.integer  "priority"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sent"
+    t.datetime "sent_at"
   end
 
   create_table "short_urls", :force => true do |t|

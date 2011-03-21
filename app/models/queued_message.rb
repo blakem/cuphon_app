@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110314004849
+# Schema version: 20110321221954
 #
 # Table name: queued_messages
 #
@@ -9,6 +9,8 @@
 #  priority   :integer(4)
 #  created_at :datetime
 #  updated_at :datetime
+#  sent       :integer(4)
+#  sent_at    :datetime
 #
 
 class QueuedMessage < ActiveRecord::Base
