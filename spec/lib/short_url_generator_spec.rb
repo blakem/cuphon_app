@@ -24,9 +24,9 @@ describe ShortUrlGenerator do
     url.should =~ /^cuphon.com\/[a-z0-9]{5}$/
   end
   
-  it "should ensure that it doesn't already exist" do
+  it "should ensure that it doesn't already exist and isn't profane" do
     module ShortUrlGenerator
-      @@words = ['FOOBAR', 'BAZQUX']
+      @@words = ['FOOBAR', 'FUCKS', 'BAZQUX']
       def self.random_base
         return @@words.shift
       end
