@@ -442,7 +442,7 @@ describe TwilioController do
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         QueuedMessage.all.length.should == 1
-        twimls = TwimlSmsRequest.all
+        twimls = TwimlSmsRequest.find_all_by_From(subscriber.device_id)
         twimls.count.should == 3
         twimls.select { |t| t.response =~ /already/ }.count.should == 1
         twimls.select { |t| t.response =~ /Ignored/ }.count.should == 2
@@ -469,7 +469,7 @@ describe TwilioController do
         post 'sms', @valid.merge(:Body => "START #{brand.title}", :From => subscriber.device_id)
         post 'sms', @valid.merge(:Body => "STaRT #{brand.title}", :From => subscriber.device_id)
         QueuedMessage.all.length.should == 2
-        twimls = TwimlSmsRequest.all
+        twimls = TwimlSmsRequest.find_all_by_From(subscriber.device_id)
         twimls.count.should == 3
         twimls.select { |t| t.response =~ /already/ }.count.should == 2
         twimls.select { |t| t.response =~ /Ignored/ }.count.should == 1
